@@ -40,8 +40,12 @@
      本文を小さくして、見出しとの比を 2.7〜3.4倍に開く。
      本文が大きいと、画面が文字で埋まって「読む量が多い」ように見える
      （2026-09-05 に指摘を受けて1段ずつ下げた）。 */
-  --fs-hero:  clamp(1.72rem, 7vw, 3.5rem);      /* ヒーローと水面。ここだけ特大 */
-  --fs-lead:  clamp(1.18rem, 4.6vw, 2.05rem);   /* 節の見出し */
+  /* ⚠️ 見出しの大きさは「画面幅（vw）」ではなく「列の幅（cqw）」に連動させる。
+     パソコンでは画面がいくら広くても列は 506px のままなので、vw で組むと
+     列に対して文字だけが大きくなり、スマホと1.7倍もずれる
+     （2026-09-05 に実測して切り替えた）。実際の値は main 側で上書きしている。 */
+  --fs-hero:  clamp(1.6rem, 7vw, 2.15rem);      /* ヒーローと水面。ここだけ特大 */
+  --fs-lead:  clamp(1.22rem, 4.6vw, 1.68rem);   /* 節の見出し */
   --fs-sub:   clamp(1rem, 3.2vw, 1.3rem);       /* 小見出し */
   --fs-body:  13.5px;                            /* 本文 */
   --fs-small: 12.5px;                            /* 補足・カード内の説明 */
@@ -281,7 +285,15 @@ body[data-dive="backdrop"] .dive-ambient video {
 
 /* ══ 共通の部品 ══════════════════════════════════════════════ */
 
-main { position: relative; z-index: 10; }
+main {
+  position: relative;
+  z-index: 10;
+  /* 子孫の cqw が、この要素の幅を基準にするようになる */
+  container-type: inline-size;
+  --fs-hero: clamp(1.6rem, 6.6cqw, 2.15rem);
+  --fs-lead: clamp(1.22rem, 5.4cqw, 1.68rem);
+  --fs-sub:  clamp(1rem, 4cqw, 1.3rem);
+}
 
 .sc {
   position: relative;
@@ -603,7 +615,7 @@ main { position: relative; z-index: 10; }
   min-height: 130svh;
 }
 .sc--break .t-huge {
-  font-size: clamp(2.05rem, 3.9vw, 3.05rem);
+  font-size: clamp(1.8rem, 7.2cqw, 2.3rem);
   letter-spacing: 0.06em;
   line-height: 1.55;
 }
@@ -643,7 +655,7 @@ main { position: relative; z-index: 10; }
   margin: 0 0 2px;
   font-family: var(--font-en);
   /* この節だけ英字が主役。日本語より大きくして、他の節と顔を変える */
-  font-size: clamp(1.5rem, 6.4vw, 2.3rem);
+  font-size: clamp(1.35rem, 5.6cqw, 1.8rem);
   font-weight: 500;
   letter-spacing: 0.1em;
   line-height: 1.2;
@@ -913,7 +925,7 @@ main { position: relative; z-index: 10; }
 .closing {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(1.4rem, 5.2vw, 2.4rem);
+  font-size: clamp(1.3rem, 5.8cqw, 1.85rem);
   font-weight: 500;
   line-height: 2;
   letter-spacing: 0.1em;
@@ -1083,7 +1095,7 @@ main { position: relative; z-index: 10; }
     --pad: clamp(42px, 5vw, 70px);
   }
 
-  body { --fs-body: 15px; --fs-small: 13.5px; --fs-hero: clamp(1.9rem, 3.4vw, 2.85rem); }
+  body { --fs-body: 15px; --fs-small: 13.5px; }
   .menu-button { display: none; }
   .global-nav { display: flex; gap: clamp(18px, 2.4vw, 34px); }
 
@@ -1114,7 +1126,7 @@ main { position: relative; z-index: 10; }
     align-items: baseline;
     padding: 22px 0;
   }
-  .act__en { font-size: 1.34rem; grid-row: 1; grid-column: 1; }
+  .act__en { grid-row: 1; grid-column: 1; }
   .act__title { grid-row: 1; grid-column: 2; }
   .act__text { grid-row: 2; grid-column: 2; }
 
