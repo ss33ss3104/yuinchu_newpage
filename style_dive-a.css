@@ -529,20 +529,24 @@ main { position: relative; z-index: 10; }
   bottom: clamp(26px, 4.5vh, 56px);
   overflow: hidden;
   pointer-events: none;
+  /* 両端を溶かす。端で文字がぷつりと切れると、帯が「箱」に見えて品が落ちる */
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
 }
 .hero__marquee-track {
   display: flex;
   width: max-content;
-  animation: hero-marquee 30s linear infinite;
+  animation: hero-marquee 52s linear infinite;
 }
 .hero__marquee-item {
-  padding-right: 3.4em;
-  font-size: var(--fs-label);
-  letter-spacing: 0.18em;
-  line-height: 1.9;
+  /* 間隔は gap ではなく padding-right で作る（gap だと送る量が1組ぶんとずれる） */
+  padding-right: 5.4em;
+  font-size: 0.575rem;
+  letter-spacing: 0.3em;
+  line-height: 2;
   white-space: nowrap;
-  color: rgba(255, 255, 255, 0.66);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.65);
+  color: rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
 }
 @keyframes hero-marquee {
   from { transform: translate3d(0, 0, 0); }
