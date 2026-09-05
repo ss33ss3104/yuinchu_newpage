@@ -215,12 +215,24 @@ body[data-dive="backdrop"] .dive-ambient video {
   position: fixed;
   inset: 0 0 auto;
   z-index: 60;
-  transition: background-color 400ms ease, backdrop-filter 400ms ease;
 }
-.site-header.is-scrolled {
+/* ⚠️ ヘッダー自身に backdrop-filter を付けない。
+   付けると、この要素が「位置の基準」になってしまい、
+   中にある position: fixed のメニューが画面いっぱいに広がらなくなる。
+   スクロール後にメニューを開くと、背景が出ずページの文字と重なった
+   （2026-09-05 に実際に起きた）。ぼかしは疑似要素へ逃がす。 */
+.site-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: rgba(4, 22, 38, 0.62);
   backdrop-filter: blur(14px);
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events: none;
 }
+.site-header.is-scrolled::before { opacity: 1; }
 .site-header__inner {
   display: flex;
   align-items: center;
@@ -1067,6 +1079,10 @@ main {
 
   .site-header__inner { padding: 12px 20px; }
 
+  /* 開いたメニュー。
+     ⚠️ 真っ黒に近い一色で覆わない。海の上に開いていることが分からなくなり、
+     別のページに飛んだように見える（2026-09-05 に指摘を受けて直した）。
+     深い海の色を上下でわずかに変え、ぼかしを強めて映像の気配だけ残す。 */
   .global-nav {
     position: fixed;
     inset: 0;
@@ -1074,15 +1090,25 @@ main {
     display: grid;
     align-content: center;
     justify-items: center;
-    gap: 26px;
-    background: rgba(3, 18, 34, 0.94);
-    backdrop-filter: blur(18px);
+    gap: 20px;
+    background: linear-gradient(180deg, rgba(5, 30, 52, 0.9) 0%, rgba(2, 15, 30, 0.95) 100%);
+    backdrop-filter: blur(26px) saturate(1.25);
     opacity: 0;
     visibility: hidden;
     transition: opacity 400ms ease, visibility 400ms;
   }
   .global-nav.is-open { opacity: 1; visibility: visible; }
-  .global-nav a { font-size: 1.05rem; letter-spacing: 0.16em; }
+  .global-nav a {
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 320ms ease;
+  }
+  /* いま見ている節だけ白く。線は引かない（中央揃えなので行頭が揃わない） */
+  .global-nav a.is-current { color: #fff; }
+
+  /* ⚠️ 社名はメニューの上に残す。消えると、開いた瞬間どのサイトか分からなくなる */
+  .brand { position: relative; z-index: 68; }
 
   .sc { padding-block: clamp(84px, 14vh, 130px); }
   .sc--break { min-height: 118svh; }
@@ -1161,7 +1187,8 @@ main {
   .dive-window { transform: translate(calc(-50% + var(--col-x)), -50%) !important; }
 
   /* ヘッダーの枠を画面いっぱいに広げ、中の部品を左へ配りなおす */
-  .site-header { inset: 0; pointer-events: none; background: none !important; backdrop-filter: none !important; }
+  .site-header { inset: 0; pointer-events: none; background: none !important; }
+  .site-header::before { display: none; }
   .site-header__inner { display: block; height: 100%; padding: 0; }
   .brand {
     position: absolute;
