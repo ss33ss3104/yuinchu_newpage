@@ -524,6 +524,35 @@ main { position: relative; z-index: 10; }
   text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
 }
 
+/* ── FVの登場（TX-02 行カーテン）──────────────────────
+   1行ずつ、下から現れる。
+   ⚠️ 隠すのは `.js` が付いているときだけ。このクラスは <head> の
+   スクリプトが描画前に付ける。JS を切れば付かず、見出しは最初から読める。
+   ⚠️ 出現の判定（sweepMotion）には載せない。最初の画面なので、
+   スクロールを待たずにその場で始める。 */
+.hero__title span,
+.hero__lead span { display: block; }
+
+.js .hero__en,
+.js .hero__title span,
+.js .hero__lead span {
+  clip-path: inset(0 0 108% 0);
+  opacity: 0;
+  animation: fv-in 860ms var(--ease-win) forwards;
+}
+.js .hero__en { animation-delay: 150ms; }
+.js .hero__title span:nth-child(1) { animation-delay: 290ms; }
+.js .hero__title span:nth-child(2) { animation-delay: 390ms; }
+.js .hero__title span:nth-child(3) { animation-delay: 490ms; }
+.js .hero__title span:nth-child(4) { animation-delay: 590ms; }
+.js .hero__lead span:nth-child(1) { animation-delay: 820ms; }
+.js .hero__lead span:nth-child(2) { animation-delay: 900ms; }
+
+@keyframes fv-in {
+  from { clip-path: inset(0 0 108% 0); opacity: 0; }
+  to   { clip-path: inset(0 0 -14% 0); opacity: 1; }
+}
+
 
 /* ══ 2. 理念｜長文を1本の柱で読ませる ═══════════════════════ */
 
@@ -610,23 +639,30 @@ main { position: relative; z-index: 10; }
 }
 .beach__text p { margin: 0 0 1.2em; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.84); }
 
+/* 写真は自動で流す（TX-03 無限マーキー）。
+   ⚠️ 同じ4枚を2組ぶん並べ、1組ぶん進んだところで最初へ戻す。
+   gap があるぶん -50% では足りないので、gap の半分だけ余分に送る。
+   ここがずれると、つなぎ目で写真が飛ぶ。 */
 .beach__strip {
+  overflow: hidden;
+  margin: 0 calc(var(--pad) * -1);
+}
+.beach__track {
   display: flex;
   gap: 14px;
-  overflow-x: auto;
-  padding-bottom: 14px;
-  margin: 0 calc(var(--pad) * -1);
-  padding-inline: var(--pad);
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+  width: max-content;
+  animation: reel 46s linear infinite;
+}
+.beach__strip:hover .beach__track,
+.beach__strip:focus-within .beach__track { animation-play-state: paused; }
+@keyframes reel {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(calc(-50% - 7px), 0, 0); }
 }
 .beach__strip figure {
   flex: 0 0 auto;
   width: clamp(210px, 34vw, 340px);
   margin: 0;
-  scroll-snap-align: start;
 }
 .beach__strip img {
   width: 100%;
@@ -1149,6 +1185,14 @@ main { position: relative; z-index: 10; }
   html { scroll-behavior: auto; }
   .dive-window,
   .dive-ambient video { transition: none; }
+  .js .hero__en,
+  .js .hero__title span,
+  .js .hero__lead span {
+    clip-path: none !important;
+    opacity: 1 !important;
+    animation: none !important;
+  }
+  .beach__track { animation: none !important; }
   .mo, .mo.is-in, .mo > *, .mo.is-in > * {
     opacity: 1 !important;
     transform: none !important;

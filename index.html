@@ -7,7 +7,10 @@
   <meta name="description" content="一般社団法人 結人は、宮古島の美しい海・文化・人のつながりを次世代へつなぐため、環境保全、地域連携、持続可能な経済活動に取り組む法人です。">
   <title>一般社団法人 結人｜宮古島の美しい海・文化・人を次世代へ</title>
   <link rel="icon" href="assets/favicon.png" type="image/png">
-  <link rel="stylesheet" href="style_dive-a.css?v=260905-30">
+  <!-- ⚠️ CSS より先に置く。あとから付けると、隠す前の文字が一瞬見えてしまう。
+       JS を切ればこのクラスは付かず、見出しは最初から読める -->
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="style_dive-a.css?v=260905-31">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
@@ -63,8 +66,8 @@
     <section class="sc sc--hero" data-window="center-lg" data-tint="0" aria-labelledby="hero-title">
       <div class="hero__inner readable">
         <p class="hero__en">GENERAL INCORPORATED ASSOCIATION YUINCHU</p>
-        <h1 class="hero__title" id="hero-title">宮古島の美しい<br>海と文化。<br>人とのつながりを<br>次の世代へ。</h1>
-        <p class="hero__lead">Save the Miyakojima BLUE for the future.<br>地域と共に歩み、未来を創り続ける。</p>
+        <h1 class="hero__title" id="hero-title" lang="ja"><span>宮古島の美しい</span><span>海と文化。</span><span>人とのつながりを</span><span>次の世代へ。</span></h1>
+        <p class="hero__lead"><span>Save the Miyakojima BLUE for the future.</span><span>地域と共に歩み、未来を創り続ける。</span></p>
       </div>
     </section>
 
@@ -124,11 +127,19 @@
           <a class="link-arrow" href="beach-clean.html">詳しくはこちら</a>
         </div>
       </div>
-      <div class="beach__strip" data-motion="slide" role="group" aria-label="ビーチクリーン活動の写真">
-        <figure><img src="assets/beach-clean-team.jpg" alt="宮古島の砂浜で行われたビーチクリーン活動" loading="lazy"></figure>
-        <figure><img src="assets/beach-clean-trash.jpg" alt="砂浜で回収された漂着ゴミ" loading="lazy"></figure>
-        <figure><img src="assets/beach-clean-team-vertical.jpg" alt="ビーチクリーン活動に参加した人々" loading="lazy"></figure>
-        <figure><img src="assets/beach-clean-collected.jpg" alt="ビーチクリーンで集められたゴミ" loading="lazy"></figure>
+      <div class="beach__strip" role="group" aria-label="ビーチクリーン活動の写真">
+        <!-- ⚠️ 同じ4枚を2組ぶん並べる。1組ぶん流したところで最初へ戻すので、
+             途切れずに回り続ける。片方は読み上げから外す -->
+        <div class="beach__track">
+          <figure><img src="assets/beach-clean-team.jpg" alt="宮古島の砂浜で行われたビーチクリーン活動" loading="lazy"></figure>
+          <figure><img src="assets/beach-clean-trash.jpg" alt="砂浜で回収された漂着ゴミ" loading="lazy"></figure>
+          <figure><img src="assets/beach-clean-team-vertical.jpg" alt="ビーチクリーン活動に参加した人々" loading="lazy"></figure>
+          <figure><img src="assets/beach-clean-collected.jpg" alt="ビーチクリーンで集められたゴミ" loading="lazy"></figure>
+          <figure aria-hidden="true"><img src="assets/beach-clean-team.jpg" alt="" loading="lazy"></figure>
+          <figure aria-hidden="true"><img src="assets/beach-clean-trash.jpg" alt="" loading="lazy"></figure>
+          <figure aria-hidden="true"><img src="assets/beach-clean-team-vertical.jpg" alt="" loading="lazy"></figure>
+          <figure aria-hidden="true"><img src="assets/beach-clean-collected.jpg" alt="" loading="lazy"></figure>
+        </div>
       </div>
     </section>
 
