@@ -10,7 +10,7 @@
   <!-- ⚠️ CSS より先に置く。あとから付けると、隠す前の文字が一瞬見えてしまう。
        JS を切ればこのクラスは付かず、見出しは最初から読める -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="style_dive-a.css?v=260905-35">
+  <link rel="stylesheet" href="style_dive-a.css?v=260905-36">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
@@ -67,7 +67,13 @@
       <div class="hero__inner readable">
         <p class="hero__en">GENERAL INCORPORATED ASSOCIATION YUINCHU</p>
         <h1 class="hero__title" id="hero-title" lang="ja"><span>宮古島の美しい</span><span>海と文化。</span><span>人とのつながりを</span><span>次の世代へ。</span></h1>
-        <p class="hero__lead"><span>Save the Miyakojima BLUE for the future.</span><span>地域と共に歩み、未来を創り続ける。</span></p>
+      </div>
+      <!-- FVの下で細く流す。1組目だけ読み上げに渡し、2組目は見た目をつなぐための複製 -->
+      <div class="hero__marquee">
+        <div class="hero__marquee-track">
+          <span class="hero__marquee-item">Save the Miyakojima BLUE for the future.　地域と共に歩み、未来を創り続ける。</span>
+          <span class="hero__marquee-item" aria-hidden="true">Save the Miyakojima BLUE for the future.　地域と共に歩み、未来を創り続ける。</span>
+        </div>
       </div>
     </section>
 
