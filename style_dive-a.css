@@ -290,7 +290,7 @@ main {
   z-index: 10;
   /* 子孫の cqw が、この要素の幅を基準にするようになる */
   container-type: inline-size;
-  --fs-hero: clamp(1.6rem, 6.6cqw, 2.15rem);
+  --fs-hero: clamp(1.75rem, 7.6cqw, 2.5rem);
   --fs-lead: clamp(1.22rem, 5.4cqw, 1.68rem);
   --fs-sub:  clamp(1rem, 4cqw, 1.3rem);
 }
@@ -575,9 +575,9 @@ main {
 
 .js .hero__en,
 .js .hero__title span {
-  clip-path: inset(0 0 108% 0);
   opacity: 0;
-  animation: fv-in 860ms var(--ease-win) forwards;
+  filter: blur(14px);
+  animation: fv-in 1150ms ease forwards;
 }
 .js .hero__en { animation-delay: 150ms; }
 .js .hero__title span:nth-child(1) { animation-delay: 290ms; }
@@ -587,9 +587,12 @@ main {
 .js .hero__marquee { opacity: 0; animation: fv-fade 900ms ease 880ms forwards; }
 @keyframes fv-fade { to { opacity: 1; } }
 
+/* RV-02 ブラーイン。ぼけた像が1行ずつ結ぶ。
+   ⚠️ 水面（ピーク）も同じブラーインだが、あちらは節ぜんぶが一度に結ぶ。
+   FVは行ごとに時間をずらしてあるので、同じ手でも見え方が変わる。 */
 @keyframes fv-in {
-  from { clip-path: inset(0 0 108% 0); opacity: 0; }
-  to   { clip-path: inset(0 0 -14% 0); opacity: 1; }
+  from { opacity: 0; filter: blur(14px); }
+  to   { opacity: 1; filter: blur(0); }
 }
 
 
@@ -615,7 +618,7 @@ main {
   min-height: 130svh;
 }
 .sc--break .t-huge {
-  font-size: clamp(1.8rem, 7.2cqw, 2.3rem);
+  font-size: clamp(1.95rem, 8.4cqw, 2.75rem);
   letter-spacing: 0.06em;
   line-height: 1.55;
 }
@@ -1262,6 +1265,7 @@ main {
   .js .hero__title span,
   .js .hero__marquee {
     clip-path: none !important;
+    filter: none !important;
     opacity: 1 !important;
     animation: none !important;
   }
