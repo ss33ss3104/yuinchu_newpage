@@ -567,10 +567,18 @@ main { position: relative; z-index: 10; }
 
 /* ══ 3. 水面を割る｜見出しだけ。ここが一番静か ═══════════════ */
 
+/* 水面を割るところ。ページで唯一のピークなので、
+   ⚠️ ここだけ文字をヒーローより大きくする。同じ大きさだと
+   「大きな見出しだけの節」が2回あるように見える（2026-09-05 に洗い出した）。 */
 .sc--break {
   justify-content: center;
   text-align: center;
   min-height: 130svh;
+}
+.sc--break .t-huge {
+  font-size: clamp(2.05rem, 3.9vw, 3.05rem);
+  letter-spacing: 0.06em;
+  line-height: 1.55;
 }
 .break__inner { max-width: 900px; }
 
@@ -724,7 +732,7 @@ main { position: relative; z-index: 10; }
 /* ══ 8. 法人概要 ═════════════════════════════════════════════ */
 
 .sc--company { justify-content: center; }
-.company__inner { width: 100%; max-width: 640px; margin: 0 auto; text-align: center; }
+.company__inner { width: 100%; max-width: 640px; margin: 0; text-align: left; }
 .company__lead { margin: 0 0 36px; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.82); }
 .company__table { margin: 0; text-align: left; }
 .company__table > div {
@@ -953,13 +961,18 @@ main { position: relative; z-index: 10; }
 }
 .cocreation__head p { grid-area: 2 / 1 / 3 / 3; margin-top: 4px; }
 
-/* プロダクト｜写真を置かないので、文字を右へ寄せた塊にするだけ */
-.sc--product .product__body { margin-left: auto; width: 90%; }
+/* プロダクト｜見出しは右、本文は左。
+   ⚠️ 本文まで右へ寄せない。ビーチクリーンの節も本文が右寄りなので、
+   そろえると2節つづけて同じ組み方に見える（2026-09-05 に洗い出して分けた）。 */
 .sc--product .rail--flat,
 .sc--product .t-lead { text-align: right; }
+.sc--product .product__body { width: 100%; }
+.sc--product .product__body p { width: 92%; }
 
-/* 法人概要｜ここだけ中央に寄せる */
-.sc--company .company__inner { text-align: center; }
+/* 法人概要｜左揃え。
+   ⚠️ 中央にしない。このあと問い合わせと締めが続けて中央なので、
+   3節つづけて同じ組み方になる（2026-09-05 に洗い出して分けた）。 */
+.sc--company .company__inner { text-align: left; margin: 0; }
 
 
 /* ══ 左に置く案内（広い画面でだけ出す） ═══════════════════════
