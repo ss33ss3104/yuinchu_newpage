@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="一般社団法人 結人は、宮古島の美しい海・文化・人のつながりを次世代へつなぐため、環境保全、地域連携、持続可能な経済活動に取り組む法人です。">
+  <title>一般社団法人 結人｜宮古島の美しい海・文化・人を次世代へ</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="style_dive-a.css?v=260905-30">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══ 背景の潜水映像 ══════════════════════════════════════
+       窓（.dive-window）はスクロールで位置と大きさが変わる。
+       背面（.dive-ambient）は同じ映像を大きくぼかしたもので、
+       縦長の映像を横長の画面に置いたときの左右の余りを埋める。
+       スマホでは窓が画面いっぱいになるので背面は使わない。 -->
+  <div class="dive-stage" aria-hidden="true">
+    <div class="dive-ambient">
+      <video id="dive-bg" muted playsinline preload="auto" poster="assets/dive/dive-poster.jpg">
+        <source src="assets/dive/dive-sm.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="dive-window" id="dive-window">
+      <video id="dive" muted playsinline preload="auto" poster="assets/dive/dive-poster.jpg">
+        <source src="assets/dive/dive.mp4" type="video/mp4">
+      </video>
+    </div>
+    <div class="dive-tint" id="dive-tint"></div>
+  </div>
+
+  <!-- 左に固定する案内。広い画面でだけ出る（現行サイトと同じ配置） -->
+  <p class="side-copy" aria-hidden="true">宮古島の美しい海・文化・人を次世代へ</p>
+  <a class="side-logo" href="#top" aria-label="一般社団法人 結人 トップへ">
+    <img src="assets/footer-logo.png" alt="">
+  </a>
+
+  <header class="site-header" id="top">
+    <div class="site-header__inner">
+      <a class="brand" href="#top" aria-label="一般社団法人 結人 トップへ">YUINCHU</a>
+      <nav class="global-nav" id="global-nav" aria-label="サイトナビゲーション">
+        <a href="#top">TOP</a>
+        <a href="#philosophy">PHILOSOPHY</a>
+        <a href="#sustainability">SUSTAINABILITY</a>
+        <a href="#beach-clean">BEACH CLEAN</a>
+        <a href="#co-creation">CO-CREATION</a>
+        <a href="#company">ABOUT</a>
+        <a href="#contact">CONTACT</a>
+      </nav>
+      <button class="menu-button" id="menu-button" type="button" aria-label="メニューを開閉" aria-controls="global-nav" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ── 1. ヒーロー｜窓は中央・大 ───────────────────────── -->
+    <section class="sc sc--hero" data-window="center-lg" data-tint="0" aria-labelledby="hero-title">
+      <div class="hero__inner readable">
+        <p class="hero__en">GENERAL INCORPORATED ASSOCIATION YUINCHU</p>
+        <h1 class="hero__title" id="hero-title">宮古島の美しい<br>海と文化。<br>人とのつながりを<br>次の世代へ。</h1>
+        <p class="hero__lead">Save the Miyakojima BLUE for the future.<br>地域と共に歩み、未来を創り続ける。</p>
+      </div>
+    </section>
+
+    <!-- ── 2. 理念｜窓は左、本文は右の1カラム ─────────────── -->
+    <section class="sc sc--philosophy" data-window="left" data-tint="8" id="philosophy">
+      <div class="philosophy__grid">
+        <p class="rail" aria-hidden="true">PHILOSOPHY</p>
+        <div class="philosophy__body readable" data-motion="lines">
+          <h2 class="t-lead">宮古島の美しい海、文化、人のつながりを次の世代へつないでいきたい。</h2>
+          <p>世界を代表するビーチリゾート宮古島。海は「宮古ブルー」といわれるほど美しく、この海で生きるウミガメやサンゴをはじめ、この地で生きる動植物、育まれてきた文化や人の営みは、宮古島の豊かな自然があったからこそ存在しています。</p>
+          <p>私たち一般社団法人 結人は、この美しく豊かな宮古島に魅了され、次の世代へとつないでいきたいと思っています。</p>
+          <p>人と人を結び、信頼を築き、経営者としての行動力と想いで新しい価値を生み出していく。この挑戦は、自分たちの利益だけではなく、この島の豊かさを未来へとつないでいくためにあります。</p>
+          <p>仲間と共に考え、共に学び、共に行動する。この島で暮らし、この島に関わる人とのつながりを大切にしながら、地域と共に歩み、未来を創り続けていきます。</p>
+          <a class="link-arrow" href="about.html">運営法人について</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. 水面を割る｜窓が画面いっぱい。ここがピーク ──── -->
+    <section class="sc sc--break" data-window="full" data-tint="0" id="sustainability">
+      <div class="break__inner readable" data-motion="bloom">
+        <h2 class="t-huge">持続可能な宮古島にするために、<br>3つの視点から行動する。</h2>
+      </div>
+    </section>
+
+    <!-- ── 4. 3つの行動｜窓は右下へ退く。横長の帯で積む ──── -->
+    <section class="sc sc--acts" data-window="corner-br" data-tint="18">
+      <div class="acts__inner readable" data-motion="draw">
+        <ol class="acts">
+          <li class="act">
+            <p class="act__en">Economy</p>
+            <h3 class="act__title">経済的活動</h3>
+            <p class="act__text">地域との連携を通じて、持続可能な経済活動を実現することを目指しています。現地でのビジネスマッチングや文化体験を通じ、地域経済への貢献と事業成長の両立を図ります。</p>
+          </li>
+          <li class="act">
+            <p class="act__en">Social</p>
+            <h3 class="act__title">社会的活動</h3>
+            <p class="act__text">地域行事への参加や地元企業との交流を通じて、地域社会とのつながりを大切にしています。文化継承や人とのつながりを育み、持続可能な社会づくりに貢献します。</p>
+          </li>
+          <li class="act">
+            <p class="act__en">Environment</p>
+            <h3 class="act__title">環境的活動</h3>
+            <p class="act__text">自然環境を大切にする意識を共有し、宮古島の美しい自然を守る活動に取り組んでいます。ビーチクリーンなどの行動を通じ、海洋環境を守ります。</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ── 5. ビーチクリーン｜窓は画面下へ。写真は横に流す ── -->
+    <section class="sc sc--beach" data-window="corner-tl" data-tint="24" id="beach-clean">
+      <div class="beach__head readable" data-motion="curtain">
+        <h2 class="t-lead">宮古ブルーの美しさを、砂浜から未来へつなぐ。</h2>
+        <div class="beach__text">
+          <p>一般社団法人 結人は、砂浜のゴミを拾い、片付けるビーチクリーン活動を続けています。</p>
+          <p>宮古ブルーの美しさを保つために、ウミガメが産卵する砂浜を未来につなげるために。拾ったゴミは集め、自治体に回収してもらっています。</p>
+          <p>ビーチクリーンの後には懇親会を行うこともあり、地域の課題やさらにできること、チャンスはないかを話し合い、次の行動へつなげています。</p>
+          <a class="link-arrow" href="beach-clean.html">詳しくはこちら</a>
+        </div>
+      </div>
+      <div class="beach__strip" data-motion="slide" role="group" aria-label="ビーチクリーン活動の写真">
+        <figure><img src="assets/beach-clean-team.jpg" alt="宮古島の砂浜で行われたビーチクリーン活動" loading="lazy"></figure>
+        <figure><img src="assets/beach-clean-trash.jpg" alt="砂浜で回収された漂着ゴミ" loading="lazy"></figure>
+        <figure><img src="assets/beach-clean-team-vertical.jpg" alt="ビーチクリーン活動に参加した人々" loading="lazy"></figure>
+        <figure><img src="assets/beach-clean-collected.jpg" alt="ビーチクリーンで集められたゴミ" loading="lazy"></figure>
+      </div>
+    </section>
+
+    <!-- ── 6. 共創｜窓は右。左は罫線で区切ったリスト ──────── -->
+    <section class="sc sc--cocreation" data-window="right" data-tint="30" id="co-creation">
+      <div class="cocreation__grid readable" data-motion="rise">
+        <div class="cocreation__head">
+          <p class="rail" aria-hidden="true">BUSINESS MATCHING</p>
+          <h2 class="t-lead">地域と共に価値を創る。実践の場をつくる。</h2>
+          <p>意思決定権を持つ経営者や地域事業者が集うことで、理念に対してスピード感を持って実行に移します。単なる交流ではなく、地域と共に価値を創る実践を目的としています。</p>
+        </div>
+        <dl class="ruled">
+          <div>
+            <dt>地域企業との対話</dt>
+            <dd>現地企業との直接の対話を通じて、地域課題の理解や協業の可能性を広げます。</dd>
+          </div>
+          <div>
+            <dt>文化・行事への参加</dt>
+            <dd>宮古島の文化や風習に触れる機会をつくり、地域への理解を深めます。</dd>
+          </div>
+          <div>
+            <dt>事業共有と実行</dt>
+            <dd>互いの取り組みを共有し、情報交換にとどまらない具体的な連携へつなげます。</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 7. プロダクト｜写真が画面の端まで出る ──────────── -->
+    <section class="sc sc--product" data-window="center-md" data-tint="38">
+      <div class="product__body readable" data-motion="unveil">
+        <p class="rail rail--flat" aria-hidden="true">BUSINESS PRODUCT</p>
+        <h2 class="t-lead">宮古島の資源から、新たな事業と商品を生み出す。</h2>
+        <p>宮古島には豊かな自然、美しい海と風土から生まれた農作物や商品が様々あります。ビジネスマッチングを通して新たなプロダクトを生み出すこと。新規事業や新たなサービスを構築していく予定です。</p>
+      </div>
+    </section>
+
+    <!-- ── 8. 法人概要｜窓は背景へ沈む ─────────────────── -->
+    <section class="sc sc--company" data-window="backdrop" data-tint="46" id="company">
+      <div class="company__inner readable" data-motion="stack">
+        <h2 class="t-mid">一般社団法人 結人</h2>
+        <p class="company__lead">宮古島の自然、文化、人の営みを未来へつなぐために、環境保全活動、地域連携、事業共創に取り組んでいます。</p>
+        <dl class="company__table">
+          <div><dt>法人名</dt><dd>一般社団法人 結人</dd></div>
+          <div><dt>所在地</dt><dd>〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 9. お問い合わせ｜最深部。ふだんは閉じておく ───── -->
+    <section class="sc sc--contact" data-window="full-deep" data-tint="56" id="contact">
+      <div class="contact__inner readable" data-motion="pop">
+        <!-- details を使う。JS を切っても開けるし、キーボードでも操作できる -->
+        <details class="ask">
+          <summary class="cta">
+            <span class="cta__text">
+              <span class="cta__label">お問い合わせ</span>
+              <span class="cta__note">ご相談・協業・取材</span>
+            </span>
+            <span class="cta__mark" aria-hidden="true"></span>
+          </summary>
+          <form class="cform" id="contact-form" novalidate>
+            <label>
+              <span>お名前</span>
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label>
+              <span>メールアドレス</span>
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label>
+              <span>お問い合わせ内容</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+            <!-- どのページから届いたかを記録する欄。人には見えない -->
+            <input type="hidden" name="source" value="法人サイト">
+            <!-- 迷惑送信よけ。人には見えない欄で、ここに入力があると機械と判断して捨てる -->
+            <input class="cform__trap" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="cform__button" type="submit">送信する</button>
+            <p class="cform__thanks" id="contact-thanks" role="status" aria-live="polite" tabindex="-1" hidden>ありがとうございます。お問い合わせを受け付けました。担当者より順次ご連絡いたします。</p>
+          </form>
+        </details>
+      </div>
+    </section>
+
+    <!-- ── 10. 締めの一言｜いちばん深いところ ─────────────── -->
+    <section class="sc sc--closing" data-window="full-deep" data-tint="70">
+      <p class="closing readable" lang="ja">美しき、宮古島。</p>
+    </section>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <img src="assets/footer-logo.png" alt="一般社団法人 結人" width="180">
+        <p>運営法人：一般社団法人 結人</p>
+        <address>住 所：〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</address>
+        <p class="footer__copy">&copy;2026 一般社団法人 結人. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="dive.js?v=260905-4"></script>
+  <script>
+    // ── 潜水映像のスクロール連動 ────────────────────────
+    // ページ全体のスクロール 0〜100% を、映像の 0〜15秒に割り当てる。
+    // 一番下まで読むと、ちょうどウミガメの正面にたどり着く。
+    initDive({
+      main: document.getElementById('dive'),
+      ambient: document.getElementById('dive-bg'),
+      windowEl: document.getElementById('dive-window'),
+      tintEl: document.getElementById('dive-tint')
+    });
+
+    // ── メニュー ───────────────────────────────────────
+    const menuButton = document.getElementById('menu-button');
+    const globalNav = document.getElementById('global-nav');
+    const header = document.querySelector('.site-header');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = globalNav.classList.toggle('is-open');
+      menuButton.classList.toggle('is-active', isOpen);
+      document.body.classList.toggle('is-menu-open', isOpen);
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+    globalNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        globalNav.classList.remove('is-open');
+        menuButton.classList.remove('is-active');
+        document.body.classList.remove('is-menu-open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      });
+    });
+    const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    // ── メニューの現在地 ───────────────────────────────
+    // 画面の上から42%の高さを越えた最後の節を「いま読んでいる節」とする。
+    const navLinks = Array.from(globalNav.querySelectorAll('a[href^="#"]'));
+    const navPairs = navLinks
+      .map((link) => ({ link, section: document.querySelector(link.getAttribute('href')) }))
+      .filter((pair) => pair.section);
+
+    const updateCurrent = () => {
+      let current = navPairs[0];
+      navPairs.forEach((pair) => {
+        if (pair.section.getBoundingClientRect().top <= window.innerHeight * 0.42) current = pair;
+      });
+      navPairs.forEach((pair) => pair.link.classList.toggle('is-current', pair === current));
+    };
+    window.addEventListener('scroll', updateCurrent, { passive: true });
+    window.addEventListener('resize', updateCurrent);
+    updateCurrent();
+
+    // ── 問い合わせフォーム ─────────────────────────────
+    // 送信先は GAS のウェブアプリURL。現行 index.html と同じ受け口。
+    // ⚠️ 本番へ採用するときは index.html / beach-clean.html と同じ値かを確認する。
+    const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxFKGOOMtYHCPVky88VasHFgksMs4KGtFgyfDVQcy8qtW2qyQl0ZXv4TtIHbyn8DGXL/exec';
+
+    const contactForm = document.getElementById('contact-form');
+    const contactThanks = document.getElementById('contact-thanks');
+    const contactButton = contactForm.querySelector('.cform__button');
+
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!contactForm.checkValidity()) { contactForm.reportValidity(); return; }
+      if (!FORM_ENDPOINT) {
+        contactThanks.textContent = 'ただいまフォームを準備中です。お手数ですが、時間をおいてお試しください。';
+        contactThanks.hidden = false;
+        return;
+      }
+      const buttonLabel = contactButton.textContent;
+      contactButton.disabled = true;
+      contactButton.textContent = '送信中…';
+      const params = new URLSearchParams();
+      new FormData(contactForm).forEach((value, key) => params.append(key, value));
+      try {
+        await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: params });
+        contactForm.querySelectorAll('label, .cform__button').forEach((el) => { el.hidden = true; });
+        contactThanks.hidden = false;
+        contactThanks.focus();
+      } catch (error) {
+        contactButton.disabled = false;
+        contactButton.textContent = buttonLabel;
+        window.alert('送信に失敗しました。時間をおいて、もう一度お試しください。');
+      }
+    });
+  </script>
+</body>
+</html>

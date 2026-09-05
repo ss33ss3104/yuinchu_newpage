@@ -1,0 +1,1163 @@
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════
+   一般社団法人 結人｜法人トップ 案A「潜る」
+   現行の7セクションの内容をそのまま使い、配置だけを毎回組み替える。
+
+   ■ 色は2色だけ
+     海（--sea）と 砂（--sand）。ほかは白と墨。
+     映像が色を持っているので、画面の側は増やさない。
+
+   ■ 窓（映像）の動かし方
+     位置と大きさは transform だけで動かす。
+     width / left を動かすと、そのたびにページ全体の計算がやり直しになる。
+
+   ■ 窓に枠を作らない
+     四角い縁が出ると、映像が「画面に貼った板」に見える。
+     縁は必ずマスクで溶かし、周りの背面（同じ映像のぼかし）へつなぐ。
+
+   ■ 画面いっぱいに広がる場面（水面を割るところ・最深部）
+     窓を巨大に引き伸ばさない。背面のぼかしも外さない。
+     窓はそのままで、縁のぼかしだけを大きく広げて画面へ溶かす。
+     引き伸ばすと粗さが出る（2026-09-05 に指摘を受けて作り直した）。
+   ══════════════════════════════════════════════════════════════ */
+
+:root {
+  --ink: #0f172a;
+  --ink-soft: rgba(15, 23, 42, 0.62);
+  --paper: #ffffff;
+  --sea: #0d7b96;          /* 1色目：海 */
+  --sand: #efe7d8;         /* 2色目：砂 */
+  --deep: #041626;         /* 水中の地（無彩色扱い） */
+
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+  --font-serif: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+  --font-en: "Cormorant Garamond", serif;
+
+  --ease-win: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --pad: clamp(20px, 5vw, 72px);
+
+  /* ── 文字の段。上と下の差を大きく取る ──────────────────
+     本文を小さくして、見出しとの比を 2.7〜3.4倍に開く。
+     本文が大きいと、画面が文字で埋まって「読む量が多い」ように見える
+     （2026-09-05 に指摘を受けて1段ずつ下げた）。 */
+  --fs-hero:  clamp(1.72rem, 7vw, 3.5rem);      /* ヒーローと水面。ここだけ特大 */
+  --fs-lead:  clamp(1.18rem, 4.6vw, 2.05rem);   /* 節の見出し */
+  --fs-sub:   clamp(1rem, 3.2vw, 1.3rem);       /* 小見出し */
+  --fs-body:  13.5px;                            /* 本文 */
+  --fs-small: 12.5px;                            /* 補足・カード内の説明 */
+  --fs-label: 0.66rem;                           /* 英字ラベル */
+  --lh-body:  1.88;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--deep);
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+body.is-menu-open { overflow: hidden; }
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* 日本語の折り返し。lang="ja" が無いと黙って無効になる */
+h1, h2, h3, .t-huge, .t-lead, .t-mid { text-wrap: balance; word-break: auto-phrase; }
+p, dd { text-wrap: pretty; word-break: auto-phrase; }
+
+
+/* ══ 背景の映像 ══════════════════════════════════════════════ */
+
+.dive-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--deep);
+}
+
+/* 背面：縦長の映像を横長の画面に置いたときの、左右の余りを埋める。
+   ぼかしてあるので低い解像度でも粗が出ない。 */
+.dive-ambient {
+  position: absolute;
+  inset: 0;
+}
+.dive-ambient video,
+.dive-ambient img {
+  width: 100%;
+  height: 100%;
+  /* ⚠️ cover を使わない。cover は画面の短い辺に合わせて上下を大きく切り落とすので、
+     窓に映っている範囲と一致しなくなる。同じ時刻の映像なのに違う場所が映るため、
+     縁をぼかしても境目に縦の線が残る（2026-09-05 に実測して判明）。
+     contain で全体を出し、横だけ引き伸ばして画面を埋める。
+     これで窓と背面の上下の位置が揃い、境目が溶ける。 */
+  object-fit: contain;
+  transform: scale(3.2, 1.06);
+  filter: blur(44px) saturate(1.35);
+  opacity: 0.6;
+  transition: filter 1000ms ease, opacity 1000ms ease, transform 1000ms ease;
+}
+
+/* 窓：シャープな本体。ここだけを見れば映像は一度も切れていない。
+   ⚠️ 縁は必ず溶かす。四角い枠が出ると、映像が「画面に貼った板」に見える。
+   radial-gradient は四隅だけ強く削れて楕円に見えるので、
+   横方向と縦方向のグラデーションを掛け合わせる（intersect）。 */
+.dive-window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(92vh * 9 / 16);
+  height: 92vh;
+  --edge-x: 14%;
+  --edge-y: 8%;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--edge-x), #000 calc(100% - var(--edge-x)), transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 var(--edge-y), #000 calc(100% - var(--edge-y)), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0, #000 var(--edge-x), #000 calc(100% - var(--edge-x)), transparent 100%),
+    linear-gradient(to bottom, transparent 0, #000 var(--edge-y), #000 calc(100% - var(--edge-y)), transparent 100%);
+  mask-composite: intersect;
+  transition:
+    transform 1100ms var(--ease-win),
+    opacity 800ms ease,
+    --edge-x 900ms ease,
+    --edge-y 900ms ease;
+  will-change: transform;
+}
+.dive-window video,
+.dive-window img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* マスクの割合を滑らかに動かすための登録。
+   @property が無いブラウザでは、値が瞬時に切り替わるだけで見た目は壊れない */
+@property --edge-x { syntax: '<percentage>'; inherits: false; initial-value: 14%; }
+@property --edge-y { syntax: '<percentage>'; inherits: false; initial-value: 8%; }
+
+/* 深さの色。潜るほど濃紺がかぶる。JS が濃さを動かす */
+.dive-tint {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(3, 30, 56, 0.35) 0%, rgba(2, 16, 34, 0.92) 100%);
+  opacity: 0;
+}
+
+/* ── 窓の位置。9通り。同じ形が続かないように並べてある ──── */
+.dive-window.is-center-lg { transform: translate(-50%, -50%) scale(1); }
+.dive-window.is-left      { transform: translate(calc(-50% - 25vw), -50%) scale(0.88); }
+.dive-window.is-right     { transform: translate(calc(-50% + 25vw), -50%) scale(0.88); }
+.dive-window.is-corner-br { transform: translate(calc(-50% + 29vw), calc(-50% + 15vh)) scale(0.68); }
+.dive-window.is-corner-tl { transform: translate(calc(-50% - 34vw), calc(-50% - 24vh)) scale(0.52); }
+.dive-window.is-center-md { transform: translate(calc(-50% - 4vw), -50%) scale(0.76); }
+
+/* ── 水に満たされる場面 ────────────────────────────────
+   ⚠️ 窓を消して背面へ渡さない。背面は540幅なので、
+   ぼかしを外して画面いっぱいに引き伸ばすと粗さがそのまま出る
+   （2026-09-05 に指摘を受けて作り直した）。
+   窓はシャープなまま残し、縁のぼかしだけを大きく広げて画面へ溶かす。
+   潜水マスク越しの視界と同じで、中心だけがはっきり見える。 */
+.dive-window.is-full {
+  transform: translate(-50%, -50%) scale(1.16);
+  --edge-x: 26%;
+  --edge-y: 18%;
+}
+.dive-window.is-full-deep {
+  transform: translate(-50%, -50%) scale(1.1);
+  --edge-x: 30%;
+  --edge-y: 22%;
+}
+.dive-window.is-backdrop {
+  transform: translate(-50%, -50%) scale(0.94);
+  --edge-x: 34%;
+  --edge-y: 26%;
+  opacity: 0.62;
+}
+
+/* 背面のぼかしは外さない。場面ごとに濃さだけ変える */
+body[data-dive="full"] .dive-ambient video {
+  filter: blur(26px) saturate(1.2);
+  transform: scale(3.2, 1.12);
+  opacity: 0.92;
+}
+body[data-dive="full-deep"] .dive-ambient video {
+  filter: blur(30px) saturate(1.15);
+  transform: scale(3.2, 1.1);
+  opacity: 0.82;
+}
+body[data-dive="backdrop"] .dive-ambient video {
+  filter: blur(40px) saturate(1.1);
+  transform: scale(3.2, 1.14);
+  opacity: 0.56;
+}
+
+
+/* ══ ヘッダー ════════════════════════════════════════════════ */
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 60;
+  transition: background-color 400ms ease, backdrop-filter 400ms ease;
+}
+.site-header.is-scrolled {
+  background: rgba(4, 22, 38, 0.62);
+  backdrop-filter: blur(14px);
+}
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px var(--pad);
+}
+.brand {
+  font-family: var(--font-en);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+.global-nav { display: none; }
+.global-nav a {
+  position: relative;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+}
+.global-nav a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 420ms var(--ease-win);
+}
+.global-nav a:hover::after,
+.global-nav a:focus-visible::after { transform: scaleX(1); transform-origin: left; }
+
+.menu-button {
+  position: relative;
+  z-index: 70;
+  width: 40px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.menu-button span {
+  position: absolute;
+  left: 6px;
+  width: 28px;
+  height: 1.5px;
+  background: #fff;
+  transition: transform 400ms var(--ease-win), opacity 300ms ease;
+}
+.menu-button span:nth-child(1) { top: 9px; }
+.menu-button span:nth-child(2) { top: 15px; }
+.menu-button span:nth-child(3) { top: 21px; }
+.menu-button.is-active span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.menu-button.is-active span:nth-child(2) { opacity: 0; }
+.menu-button.is-active span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+
+/* ══ 共通の部品 ══════════════════════════════════════════════ */
+
+main { position: relative; z-index: 10; }
+
+.sc {
+  position: relative;
+  padding: clamp(72px, 11vh, 150px) var(--pad);
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  /* ⚠️ 文字の背後に敷く影（.readable::before）は要素の外へ大きく広がるので、
+     そのままだとページが横に 320px 伸びる（2026-09-05 に実測）。
+     hidden ではなく clip にする。clip はスクロールできる領域を作らないので、
+     中の写真の横スクロール（.beach__strip）はそのまま効く。 */
+  overflow-x: clip;
+}
+
+/* 文字が載る場所にだけ影を敷く。画面全体を暗くして読ませない。
+   ⚠️ 端を必ず 0 まで落としきること。途中で切れると、影が四角い板に見える。
+   closest-side にすると、辺までの距離で色が決まるので四隅が残らない。 */
+.readable { position: relative; z-index: 1; }
+.readable::before {
+  content: '';
+  position: absolute;
+  inset: -46% -34%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(3, 19, 34, 0.72) 0%, rgba(3, 19, 34, 0.46) 42%, rgba(3, 19, 34, 0.16) 68%, rgba(3, 19, 34, 0) 100%);
+  pointer-events: none;
+}
+
+.t-huge {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-hero);
+  font-weight: 500;
+  line-height: 1.44;
+  letter-spacing: 0.02em;
+}
+.t-lead {
+  margin: 0 0 1.4em;
+  font-family: var(--font-serif);
+  font-size: var(--fs-lead);
+  font-weight: 500;
+  line-height: 1.58;
+}
+.t-mid {
+  margin: 0 0 0.8em;
+  font-family: var(--font-serif);
+  font-size: var(--fs-sub);
+  font-weight: 500;
+  line-height: 1.56;
+}
+
+/* 縦に置く英字。装飾ではなく、節の位置を示す目印 */
+.rail {
+  margin: 0;
+  font-family: var(--font-en);
+  font-size: var(--fs-label);
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.62);
+}
+.rail--flat { writing-mode: horizontal-tb; }
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+}
+.link-arrow::after {
+  content: '';
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  transition: transform 420ms var(--ease-win);
+}
+.link-arrow:hover::after,
+.link-arrow:focus-visible::after { transform: translateX(8px); }
+
+/* ══ 節ごとの動き ══════════════════════════════════════════════
+   隠す指定は JS が `.mo` を付けたときだけ効く（JS を切っても文字は読める）。
+   節が変わるたびに動きを変える。同じ動きが続くと、動いていること自体に
+   気づかれなくなるため（2026-09-05 に9種類へ分けた）。
+
+   ⚠️ 動かすのは transform / opacity / clip-path / filter だけ。
+   幅や高さを動かすと、そのたびにページ全体の計算がやり直しになる。
+
+   技法IDは 02_solos/260815_motion_library/work/モーション仕様_v2.md から引いている。 */
+
+.mo { will-change: transform, opacity; }
+
+/* TX-02 行カーテン｜段落が下から順に上がる（理念・プロダクト） */
+.mo[data-motion="lines"] > * { opacity: 0; transform: translateY(16px); }
+.mo[data-motion="lines"].is-in > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 820ms ease, transform 820ms var(--ease-win);
+}
+.mo[data-motion="lines"].is-in > *:nth-child(2) { transition-delay: 90ms; }
+.mo[data-motion="lines"].is-in > *:nth-child(3) { transition-delay: 180ms; }
+.mo[data-motion="lines"].is-in > *:nth-child(4) { transition-delay: 270ms; }
+.mo[data-motion="lines"].is-in > *:nth-child(5) { transition-delay: 360ms; }
+.mo[data-motion="lines"].is-in > *:nth-child(6) { transition-delay: 450ms; }
+
+/* RV-02 ブラーイン｜ぼけた像が結ぶ。水面を割る場面。ここが一番長い尺 */
+.mo[data-motion="bloom"] { opacity: 0; filter: blur(15px); transform: scale(1.05); }
+.mo[data-motion="bloom"].is-in {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+  transition: opacity 1500ms ease, filter 1600ms ease, transform 1900ms var(--ease-win);
+}
+
+/* TX-05 下線ドロー ＋ RV-04 スタッガー｜罫線が左から引かれ、中身が順に出る */
+.mo[data-motion="draw"] .act::before,
+.mo[data-motion="draw"] .act:last-child::after { transform: scaleX(0); }
+.mo[data-motion="draw"] .act > * { opacity: 0; transform: translateY(10px); }
+.mo[data-motion="draw"].is-in .act::before,
+.mo[data-motion="draw"].is-in .act:last-child::after {
+  transform: scaleX(1);
+  transition: transform 900ms var(--ease-win);
+}
+.mo[data-motion="draw"].is-in .act > * {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease 220ms, transform 700ms var(--ease-win) 220ms;
+}
+.mo[data-motion="draw"].is-in .act:nth-child(2)::before { transition-delay: 160ms; }
+.mo[data-motion="draw"].is-in .act:nth-child(3)::before { transition-delay: 320ms; }
+.mo[data-motion="draw"].is-in .act:nth-child(2) > * { transition-delay: 380ms; }
+.mo[data-motion="draw"].is-in .act:nth-child(3) > * { transition-delay: 540ms; }
+
+/* RV-06 画像カーテン｜左から開く（ビーチクリーン） */
+.mo[data-motion="curtain"] { clip-path: inset(0 100% 0 0); }
+.mo[data-motion="curtain"].is-in {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1050ms var(--ease-win);
+}
+/* 写真は親を切り取らず、1枚ずつ横から入れる。
+   ⚠️ 親の clip-path と重ねない。二重に遅れて、出るまでが長くなる。 */
+.mo[data-motion="slide"] figure { opacity: 0; transform: translateX(26px); }
+.mo[data-motion="slide"].is-in figure {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease, transform 820ms var(--ease-win);
+}
+.mo[data-motion="slide"].is-in figure:nth-child(2) { transition-delay: 110ms; }
+.mo[data-motion="slide"].is-in figure:nth-child(3) { transition-delay: 220ms; }
+.mo[data-motion="slide"].is-in figure:nth-child(4) { transition-delay: 330ms; }
+
+/* TX-11 起き上がり｜縦書きの見出しが奥から立つ（共創） */
+.mo[data-motion="rise"] { perspective: 900px; }
+.mo[data-motion="rise"] .t-lead,
+.mo[data-motion="rise"] .rail { opacity: 0; transform: rotateY(26deg) translateX(18px); transform-origin: right center; }
+.mo[data-motion="rise"] .ruled > div { opacity: 0; transform: translateY(12px); }
+.mo[data-motion="rise"].is-in .t-lead,
+.mo[data-motion="rise"].is-in .rail {
+  opacity: 1;
+  transform: none;
+  transition: opacity 900ms ease, transform 1150ms var(--ease-win);
+}
+.mo[data-motion="rise"].is-in .ruled > div {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease 260ms, transform 700ms var(--ease-win) 260ms;
+}
+.mo[data-motion="rise"].is-in .ruled > div:nth-child(2) { transition-delay: 380ms; }
+.mo[data-motion="rise"].is-in .ruled > div:nth-child(3) { transition-delay: 500ms; }
+
+/* RV-03 の縦向き｜下から順に現れる（プロダクト）。
+   締めの wipe は左右に開くので、方向で区別できる */
+.mo[data-motion="unveil"] > * { clip-path: inset(100% 0 0 0); }
+.mo[data-motion="unveil"].is-in > * {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 950ms var(--ease-win);
+}
+.mo[data-motion="unveil"].is-in > *:nth-child(2) { transition-delay: 130ms; }
+.mo[data-motion="unveil"].is-in > *:nth-child(3) { transition-delay: 260ms; }
+
+/* RV-01 フェードアップ＋スタッガー｜表の行が順に（法人概要） */
+.mo[data-motion="stack"] > *,
+.mo[data-motion="stack"] .company__table > div { opacity: 0; transform: translateY(12px); }
+.mo[data-motion="stack"].is-in > *,
+.mo[data-motion="stack"].is-in .company__table > div {
+  opacity: 1;
+  transform: none;
+  transition: opacity 700ms ease, transform 700ms var(--ease-win);
+}
+.mo[data-motion="stack"].is-in > *:nth-child(2) { transition-delay: 100ms; }
+.mo[data-motion="stack"].is-in > *:nth-child(3) { transition-delay: 200ms; }
+.mo[data-motion="stack"].is-in .company__table > div:nth-child(2) { transition-delay: 320ms; }
+
+/* RV-05 スプリングポップ｜少し弾んで出る（問い合わせのボタン） */
+.mo[data-motion="pop"] { opacity: 0; transform: scale(0.94); }
+.mo[data-motion="pop"].is-in {
+  opacity: 1;
+  transform: none;
+  transition: opacity 480ms ease, transform 760ms cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+
+/* RV-03 クリップワイプ｜中央から左右へ開く（締めの一言） */
+.mo[data-motion="wipe"] { clip-path: inset(0 50% 0 50%); opacity: 0; }
+.mo[data-motion="wipe"].is-in {
+  clip-path: inset(0 0 0 0);
+  opacity: 1;
+  transition: clip-path 1400ms var(--ease-win), opacity 900ms ease;
+}
+
+
+/* ══ 1. ヒーロー ═════════════════════════════════════════════ */
+
+.sc--hero {
+  min-height: 100svh;
+  justify-content: center;
+  text-align: center;
+}
+.hero__inner { max-width: 680px; }
+.hero__en {
+  margin: 0 0 24px;
+  font-family: var(--font-en);
+  font-size: var(--fs-label);
+  letter-spacing: 0.32em;
+  color: rgba(255, 255, 255, 0.78);
+}
+.hero__title {
+  margin: 0 0 28px;
+  font-family: var(--font-serif);
+  font-size: var(--fs-hero);
+  font-weight: 500;
+  line-height: 1.48;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.55);
+}
+.hero__lead {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 2.05;
+  color: rgba(255, 255, 255, 0.86);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.6);
+}
+
+
+/* ══ 2. 理念｜長文を1本の柱で読ませる ═══════════════════════ */
+
+.philosophy__grid { width: 100%; }
+.philosophy__body p {
+  margin: 0 0 1.35em;
+  color: rgba(255, 255, 255, 0.88);
+}
+.philosophy__body .t-lead { margin-bottom: 1.1em; }
+.sc--philosophy .rail { margin-bottom: 20px; }
+
+
+/* ══ 3. 水面を割る｜見出しだけ。ここが一番静か ═══════════════ */
+
+.sc--break {
+  justify-content: center;
+  text-align: center;
+  min-height: 130svh;
+}
+.break__inner { max-width: 900px; }
+
+
+/* ══ 4. 3つの行動｜横長の帯。角丸カードを並べない ═══════════ */
+
+.acts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0;
+}
+.act {
+  position: relative;
+  display: grid;
+  gap: 4px 28px;
+  padding: 26px 0;
+}
+/* ⚠️ 罫線を border で引かない。border は伸ばす動きを付けられない。
+   疑似要素の線にして、transform: scaleX で左から引けるようにする。 */
+.act::before,
+.act:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.26);
+  transform-origin: left;
+}
+.act::before { top: 0; }
+.act:last-child::after { bottom: 0; }
+.act__en {
+  margin: 0 0 2px;
+  font-family: var(--font-en);
+  /* この節だけ英字が主役。日本語より大きくして、他の節と顔を変える */
+  font-size: clamp(1.5rem, 6.4vw, 2.3rem);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1.2;
+  color: var(--sand);
+  opacity: 0.85;
+}
+.act__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-sub);
+  font-weight: 500;
+}
+.act__text {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+
+/* ══ 5. ビーチクリーン｜写真は横に流す ═══════════════════════ */
+
+.sc--beach {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(26px, 4vh, 48px);
+}
+.beach__text p { margin: 0 0 1.2em; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.84); }
+
+.beach__strip {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin: 0 calc(var(--pad) * -1);
+  padding-inline: var(--pad);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+}
+.beach__strip figure {
+  flex: 0 0 auto;
+  width: clamp(210px, 34vw, 340px);
+  margin: 0;
+  scroll-snap-align: start;
+}
+.beach__strip img {
+  width: 100%;
+  height: clamp(140px, 19vh, 196px);
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+
+/* ══ 6. 共創｜罫線で区切る。カードにしない ═══════════════════ */
+
+.cocreation__head p {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: rgba(255, 255, 255, 0.84);
+}
+.cocreation__head .rail { margin-bottom: 18px; }
+.ruled { margin: 24px 0 0; display: grid; gap: 15px; }
+.ruled > div {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding-left: 18px;
+}
+/* 3つの行動が横の罫線なので、こちらは縦の線で区切る */
+.ruled > div::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  bottom: 0.4em;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.38);
+}
+.ruled dt {
+  font-family: var(--font-serif);
+  font-size: var(--fs-sub);
+  font-weight: 500;
+}
+.ruled dd {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.85;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+
+/* ══ 7. プロダクト｜写真が窓の手前に重なる ═══════════════════ */
+
+.sc--product {
+  /* 写真を置かない節。背景の映像がそのまま絵になる
+     （2026-09-05 にまもる君の写真を外した） */
+  justify-content: center;
+}
+.product__body p { margin: 0; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.84); }
+.product__body .rail { margin-bottom: 16px; }
+
+
+/* ══ 8. 法人概要 ═════════════════════════════════════════════ */
+
+.sc--company { justify-content: center; }
+.company__inner { width: 100%; max-width: 640px; margin: 0 auto; text-align: center; }
+.company__lead { margin: 0 0 36px; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.82); }
+.company__table { margin: 0; text-align: left; }
+.company__table > div {
+  display: grid;
+  gap: 4px;
+  padding: 18px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+.company__table > div:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.22); }
+.company__table dt {
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: var(--sand);
+}
+.company__table dd { margin: 0; font-size: 0.94rem; }
+
+
+/* ══ 9. お問い合わせ ═════════════════════════════════════════ */
+
+.sc--contact {
+  justify-content: center;
+  /* ボタン1つしか置かないので、1画面ぶん取らない。
+     ⚠️ ひとつ上の法人概要が1画面を使っていて下半分が空くため、
+     ここを詰めないとボタンだけが遠くに離れて見える */
+  min-height: 0;
+  padding-block: clamp(26px, 3.2vh, 44px) clamp(34px, 4.4vh, 60px);
+}
+.contact__inner { width: 100%; max-width: 560px; margin: 0 auto; }
+
+/* ── 開閉するボタン ───────────────────────────────────
+   details を使うので、JS を切っても開くし、キーボードでも操作できる。
+   ⚠️ 高さは動かさない。開いた中身を opacity と transform で出す。
+   高さを動かすと、そのたびにページ全体の計算がやり直しになる。 */
+.ask { width: 100%; }
+/* ── 開くボタン ──────────────────────────────────────── */
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  width: fit-content;
+  margin-inline: auto;
+  padding: 6px 2px;
+  cursor: pointer;
+  list-style: none;
+  color: rgba(255, 255, 255, 0.88);
+  transition: color 420ms ease;
+}
+.cta::-webkit-details-marker { display: none; }
+.cta::marker { content: ''; }
+.cta:hover,
+.cta:focus-visible { color: #fff; }
+.cta__text { display: grid; gap: 2px; text-align: center; }
+.cta__label {
+  font-family: var(--font-serif);
+  font-size: var(--fs-sub);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.cta__note {
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* 開き具合の印。閉じていると十字、開くと横線1本になる */
+.cta__mark { position: relative; flex: 0 0 auto; width: 13px; height: 13px; }
+.cta__mark::before,
+.cta__mark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transition: transform 460ms var(--ease-win);
+}
+.cta__mark::after { transform: rotate(90deg); }
+.ask[open] .cta__mark::after { transform: rotate(0deg); }
+
+/* ⚠️ details の中身に display を指定すると、閉じているときに隠す
+   ブラウザ既定の指定を上書きしてしまう。閉じている側を明示して打ち消す。 */
+.cform { display: grid; gap: 18px; margin-top: 24px; }
+.ask:not([open]) .cform { display: none; }
+.ask[open] .cform { animation: ask-in 640ms var(--ease-win) both; }
+@keyframes ask-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: none; }
+}
+.cform label { display: grid; gap: 8px; }
+.cform label span {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.78);
+}
+.cform input,
+.cform textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 3px;
+  background: rgba(2, 14, 28, 0.42);
+  color: #fff;
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color 300ms ease, background-color 300ms ease;
+}
+.cform input:focus,
+.cform textarea:focus {
+  outline: none;
+  border-color: #fff;
+  background: rgba(2, 14, 28, 0.6);
+}
+.cform textarea { resize: vertical; }
+.cform__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.cform__button {
+  justify-self: start;
+  margin-top: 6px;
+  padding: 14px 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 3px;
+  background: transparent;
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  cursor: pointer;
+  transition: background-color 380ms ease, color 380ms ease;
+}
+.cform__button:hover,
+.cform__button:focus-visible { background: #fff; color: var(--deep); }
+.cform__thanks {
+  margin: 0;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 3px;
+  font-size: 0.92rem;
+}
+
+
+/* ══ 締めの一言｜いちばん深いところ ═══════════════════════════
+   ⚠️ 文言は坂西さんと擦り合わせていない。私が書いた案。 */
+
+.sc--closing {
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  min-height: 82svh;
+  padding-block: clamp(56px, 8vh, 96px) clamp(88px, 14vh, 172px);
+}
+.closing {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 5.2vw, 2.4rem);
+  font-weight: 500;
+  line-height: 2;
+  letter-spacing: 0.1em;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ══ フッター ════════════════════════════════════════════════ */
+
+.footer {
+  position: relative;
+  z-index: 10;
+  padding: clamp(60px, 9vh, 96px) var(--pad) 48px;
+  /* ⚠️ 濃紺のベタ塗りにしない。板が1枚浮いて見えて、
+     映像の上に置いた他の節と揃わない（2026-09-05 に指摘を受けて直した）。
+     上から下へ効いてくるグラデーションだけにして、締めの一言から続けて落とす。 */
+  background: linear-gradient(180deg, rgba(2, 14, 28, 0) 0%, rgba(2, 14, 28, 0.46) 42%, rgba(2, 14, 28, 0.8) 100%);
+  text-align: center;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.76);
+}
+.footer__inner { display: grid; justify-items: center; gap: 14px; }
+.footer img { width: 150px; opacity: 0.92; }
+.footer p, .footer address { margin: 0; font-style: normal; line-height: 1.9; }
+.footer__copy { margin-top: 18px; font-size: 0.72rem; color: rgba(255, 255, 255, 0.5); }
+
+
+/* ══════════════════════════════════════════════════════════════
+   節ごとの「顔」の作り分け ── 画面幅で分けない
+
+   パソコンでも、読む列の幅はスマホと同じにした（映像が切れない幅）。
+   同じ幅なら同じ組み方でよいので、ここは共通で持つ。
+   ⚠️ 縦書きは grid の行まで指定する。列だけ指定すると本文が2行目へ落ちる。
+   ══════════════════════════════════════════════════════════════ */
+
+/* 理念｜ラベルを縦に立て、本文を右へずらす。読み物として密度を上げる */
+.philosophy__grid {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+.sc--philosophy .rail {
+  grid-area: 1 / 1;
+  writing-mode: vertical-rl;
+  margin: 0;
+  font-size: 0.6rem;
+}
+.philosophy__body { grid-area: 1 / 2; max-width: 100%; }
+
+/* 3つの行動｜英字が主役。詰めて積む */
+.act { padding: 20px 0; }
+
+/* ビーチクリーン｜本文だけ右へ寄せ、見出しと段差をつける */
+.beach__head { display: grid; gap: 16px; }
+.beach__text { margin-left: auto; width: 88%; }
+
+/* 共創｜見出しを縦に立てて右へ。3つの行動と正反対の向きにする */
+.cocreation__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items: start;
+}
+.cocreation__head .rail { grid-area: 1 / 1; }
+.cocreation__head .t-lead {
+  grid-area: 1 / 2;
+  writing-mode: vertical-rl;
+  max-height: 30vh;
+  margin: 0;
+  letter-spacing: 0.04em;
+}
+.cocreation__head p { grid-area: 2 / 1 / 3 / 3; margin-top: 4px; }
+
+/* プロダクト｜写真を置かないので、文字を右へ寄せた塊にするだけ */
+.sc--product .product__body { margin-left: auto; width: 90%; }
+.sc--product .rail--flat,
+.sc--product .t-lead { text-align: right; }
+
+/* 法人概要｜ここだけ中央に寄せる */
+.sc--company .company__inner { text-align: center; }
+
+
+/* ══ 左に置く案内（広い画面でだけ出す） ═══════════════════════
+   現行サイトと同じ配置。縦書きの一言・メニュー・ロゴを左に固定する。 */
+
+.side-copy,
+.side-logo { display: none; }
+
+
+/* ══════════════════════════════════════════════════════════════
+   スマホ（〜767px）：映像を全面に敷く。縦の映像と縦の画面なので
+   ここでは1コマも切れない。
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .dive-ambient { display: none; }
+  .dive-window {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* クラスによる移動をここでは全部打ち消す。
+       縁のぼかしも要らない。画面いっぱいなので、ぼかすと端に地の色が出るだけ */
+    transform: none !important;
+    opacity: 1 !important;
+    --edge-x: 0% !important;
+    --edge-y: 0% !important;
+  }
+
+  .site-header__inner { padding: 12px 20px; }
+
+  .global-nav {
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    gap: 26px;
+    background: rgba(3, 18, 34, 0.94);
+    backdrop-filter: blur(18px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 400ms ease, visibility 400ms;
+  }
+  .global-nav.is-open { opacity: 1; visibility: visible; }
+  .global-nav a { font-size: 1.05rem; letter-spacing: 0.16em; }
+
+  .sc { padding-block: clamp(84px, 14vh, 130px); }
+  .sc--break { min-height: 118svh; }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   パソコン（768px〜）：読む列を1本にして、映像をその背後に固定する。
+
+   ⚠️ 列の幅は「高さ × 9/16」にする。これが映像の縦横比そのものなので、
+   この幅なら映像が一度も切れない。窓を動かすのはやめた
+   （2026-09-05。現行サイトと同じ画面構成に揃えるため）。
+   ══════════════════════════════════════════════════════════════ */
+
+@media (min-width: 768px) {
+  :root {
+    --col-w: min(56.25vh, 88vw);
+    /* ⚠️ 列の中の余白は基準ごと差し替える。.sc の padding だけ直すと、
+       写真の横スクロールと全幅写真が古い --pad を見たままで列からはみ出す */
+    --pad: clamp(42px, 5vw, 70px);
+  }
+
+  body { --fs-body: 15px; --fs-small: 13.5px; --fs-hero: clamp(1.9rem, 3.4vw, 2.85rem); }
+  .menu-button { display: none; }
+  .global-nav { display: flex; gap: clamp(18px, 2.4vw, 34px); }
+
+  /* 窓は動かさない。列の背後に置いたまま */
+  .dive-window {
+    top: 50%;
+    left: 50%;
+    width: var(--col-w);
+    height: 100vh;
+    transform: translate(-50%, -50%) !important;
+    opacity: 1 !important;
+    --edge-x: 12% !important;
+    --edge-y: 6% !important;
+  }
+
+  /* 読む列。スマホと同じ幅・同じ組み方 */
+  main {
+    width: var(--col-w);
+    margin: 0 auto;
+  }
+  .sc { padding-inline: var(--pad); }
+  .footer { padding-inline: var(--pad); }
+
+  /* 3つの行動｜英字と見出しを横に並べる余地がここでできる */
+  .act {
+    grid-template-columns: 162px 1fr;
+    column-gap: 0;
+    align-items: baseline;
+    padding: 22px 0;
+  }
+  .act__en { font-size: 1.34rem; grid-row: 1; grid-column: 1; }
+  .act__title { grid-row: 1; grid-column: 2; }
+  .act__text { grid-row: 2; grid-column: 2; }
+
+  .company__table > div {
+    grid-template-columns: 130px 1fr;
+    gap: 18px;
+    align-items: baseline;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   広い画面（1100px〜）：列を右へ寄せ、空いた左に案内を置く。
+   現行サイトと同じ配置（左上に社名／左端に縦書きの一言／
+   左の中ほどにメニュー／左下にロゴ）。
+   ══════════════════════════════════════════════════════════════ */
+
+@media (min-width: 1100px) {
+  :root { --col-x: clamp(96px, 10.5vw, 190px); }
+
+  main { margin-left: calc(50% - var(--col-w) / 2 + var(--col-x)); margin-right: 0; }
+  .dive-window { transform: translate(calc(-50% + var(--col-x)), -50%) !important; }
+
+  /* ヘッダーの枠を画面いっぱいに広げ、中の部品を左へ配りなおす */
+  .site-header { inset: 0; pointer-events: none; background: none !important; backdrop-filter: none !important; }
+  .site-header__inner { display: block; height: 100%; padding: 0; }
+  .brand {
+    position: absolute;
+    top: clamp(38px, 5.5vh, 74px);
+    left: clamp(46px, 4.8vw, 92px);
+    font-size: 1.1rem;
+    pointer-events: auto;
+  }
+
+  /* メニュー｜左の中ほどに縦積み。現在地は行頭の線で示す */
+  .global-nav {
+    position: absolute;
+    top: 50%;
+    left: clamp(170px, 18vw, 300px);
+    transform: translateY(-50%);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: clamp(7px, 0.9vh, 13px);
+    pointer-events: auto;
+  }
+  .global-nav a {
+    font-family: var(--font-en);
+    font-size: 0.86rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.72);
+    transition: color 380ms ease;
+  }
+  .global-nav a::after { display: none; }
+  .global-nav a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 12px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 420ms var(--ease-win);
+  }
+  .global-nav a.is-current {
+    color: #fff;
+  }
+  .global-nav a.is-current::before { transform: scaleX(1); transform-origin: left; }
+  .global-nav a:hover { color: #fff; }
+
+  /* 縦書きの一言｜左端 */
+  .side-copy {
+    display: block;
+    position: fixed;
+    z-index: 12;
+    top: 50%;
+    left: clamp(44px, 4.6vw, 88px);
+    margin: 0;
+    writing-mode: vertical-rl;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-serif);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.66);
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+    pointer-events: none;
+  }
+
+  /* ロゴ｜左下。白抜きにする */
+  .side-logo {
+    display: block;
+    position: fixed;
+    z-index: 12;
+    left: clamp(120px, 13vw, 232px);
+    bottom: clamp(30px, 5vh, 62px);
+    width: clamp(230px, 23vw, 400px);
+    transform: translateX(-50%);
+    opacity: 0.94;
+  }
+  .side-logo img { width: 100%; filter: brightness(0) invert(1); }
+
+  /* ⚠️ ここでフッターの地を塗り直さない。塗ると共通のグラデーションが
+     消えて、濃紺の板が1枚戻る（2026-09-05 に実測して判明）。
+     ⚠️ 左下にロゴが固定で出ているので、フッターのロゴは消す。
+     両方出すと、最下部で同じロゴが2つ並ぶ。狭い画面では左の案内が出ないので残す。 */
+  .footer img { display: none; }
+}
+
+@media (min-width: 1500px) {
+  .brand { font-size: 1.2rem; }
+  .global-nav a { font-size: 0.92rem; }
+}
+
+
+/* ══ 動きを減らす設定のとき ══════════════════════════════════
+   映像は最初のコマで止める。文字は最初から出す。 */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .dive-window,
+  .dive-ambient video { transition: none; }
+  .mo, .mo.is-in, .mo > *, .mo.is-in > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+  .act::before, .act:last-child::after { transform: none !important; }
+  .ask[open] .cform { animation: none; }
+  .cta__mark::before, .cta__mark::after { transition: none; }
+}
+body.is-static .dive-tint { opacity: 0.38; }

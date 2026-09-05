@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+<title>スポンサー加盟のご案内 | YUINCHU Beach Clean Project</title>
+<meta name="description" content="YUINCHU Beach Clean Project のスポンサー加盟ガイダンス。ランク・掲載位置・掲載サイズ・ロゴ入稿ルール・申込の流れ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Caveat:wght@500;700&family=Inter:wght@400;500;600;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+
+/* ── 見た目の語彙は work/sponsor.html と同じものを使う。
+      増やさずに揃えるため、値はあちらの :root をそのまま写している ───── */
+:root {
+  --c-bg: #FFFFFF;
+  --c-ink: #0B0B0B;
+  --c-text: #393939;
+  --c-muted: #717171;
+  --c-red: #FF4A60;
+  --c-blue: #2F81F7;
+  --c-yellow: #FDB927;
+  --c-border: #0B0B0B;
+  --c-soft: #F5F5F5;
+  --b-thick: 0.23cqw;
+  --b-thin: 0.16cqw;
+  --shadow-card: 0.62cqw 0.62cqw 0 0 var(--c-border);
+  --shadow-card-sm: 0.31cqw 0.31cqw 0 0 var(--c-border);
+  --font-display: "Archivo Black", "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-meta: "Inter", "Noto Sans JP", system-ui, sans-serif;
+  --font-jp: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Meiryo", sans-serif;
+  --font-hand: "Caveat", "Noto Sans JP", cursive;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: #1B2430;
+  font-family: var(--font-jp);
+  color: var(--c-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.deck { display: flex; flex-direction: column; align-items: center; gap: 24px; padding: 24px 16px 80px; }
+
+/* スライドは 16:9 の器。中の寸法はすべて cqw（器の幅に対する％）で書く。
+   こうしておくと、画面でも印刷でも同じ見た目のまま拡大縮小できる。 */
+.slide {
+  container-type: inline-size;
+  position: relative;
+  width: min(100%, 1280px);
+  aspect-ratio: 16 / 9;
+  background: var(--c-bg);
+  border: 3px solid var(--c-ink);
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  padding: 5.2cqw 5.6cqw 4.4cqw;
+}
+.slide--ink { background: var(--c-ink); color: #fff; }
+.slide--yellow { background: var(--c-yellow); }
+.slide--soft { background: var(--c-soft); }
+
+/* ── 共通の見出し ───────────────────────────── */
+.eyebrow {
+  display: inline-flex; align-items: baseline; gap: 0.9cqw;
+  font-family: var(--font-meta); font-weight: 700;
+  font-size: 0.95cqw; letter-spacing: .18em; color: var(--c-muted);
+  margin: 0 0 1.1cqw;
+}
+.eyebrow b { font-family: var(--font-display); font-size: 1.6cqw; letter-spacing: 0; color: var(--c-red); font-weight: 400; }
+.slide--ink .eyebrow { color: rgba(255,255,255,.66); }
+.h {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: 3.5cqw; line-height: 1.18; letter-spacing: -.02em;
+  margin: 0 0 1.5cqw; color: inherit;
+}
+.h--sm { font-size: 2.7cqw; }
+.lead { font-size: 1.35cqw; line-height: 1.8; margin: 0 0 2.2cqw; max-width: 62cqw; }
+.slide--ink .lead { color: rgba(255,255,255,.8); }
+.mark { background: linear-gradient(transparent 58%, var(--c-yellow) 58%, var(--c-yellow) 94%, transparent 94%); padding: 0 .12em; }
+.mark--red { background: linear-gradient(transparent 58%, var(--c-red) 58%, var(--c-red) 94%, transparent 94%); }
+.hand { font-family: var(--font-hand); font-weight: 700; }
+
+.body { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
+
+/* ページ番号とブランド */
+.slide__no {
+  position: absolute; right: 2.6cqw; bottom: 2.1cqw;
+  font-family: var(--font-meta); font-weight: 700; font-size: 0.95cqw;
+  letter-spacing: .12em; color: var(--c-muted);
+}
+.slide--ink .slide__no { color: rgba(255,255,255,.5); }
+.slide__brand {
+  position: absolute; left: 2.9cqw; bottom: 2.1cqw;
+  font-family: var(--font-display); font-size: 1cqw; letter-spacing: .04em; color: var(--c-muted);
+}
+.slide--ink .slide__brand { color: rgba(255,255,255,.5); }
+
+/* ── 01 表紙 ───────────────────────────────── */
+.cover { justify-content: flex-end; padding-bottom: 6cqw; }
+.cover__hand { font-family: var(--font-hand); font-weight: 700; font-size: 3cqw; color: var(--c-yellow); line-height: 1; margin: 0 0 .6cqw; }
+.cover__title { font-family: var(--font-display); font-size: 6.6cqw; line-height: 1.06; letter-spacing: -.03em; margin: 0 0 1.6cqw; color: #fff; }
+.cover__sub { font-family: var(--font-meta); font-weight: 700; font-size: 1.15cqw; letter-spacing: .2em; color: rgba(255,255,255,.7); margin: 0 0 2.6cqw; }
+.cover__meta { display: flex; gap: 2.4cqw; font-size: 1.05cqw; color: rgba(255,255,255,.62); }
+.cover__chars {
+  position: absolute; right: 4cqw; top: 8cqw;
+  display: flex; align-items: flex-end; gap: 0.8cqw;
+}
+.cover__chars img { height: 26cqw; width: auto; }
+.cover__chars img.is-kid { height: 18.7cqw; }
+
+/* ── ランク表 ─────────────────────────────── */
+.ranks { display: flex; flex-direction: column; gap: 0.75cqw; }
+.rank {
+  display: grid; grid-template-columns: 12cqw 1fr 10.5cqw 8cqw;
+  align-items: center; gap: 1.6cqw;
+  border: var(--b-thick) solid var(--c-border); border-radius: 1.2cqw;
+  background: #fff; padding: 1.15cqw 1.8cqw;
+}
+.rank__name { font-family: var(--font-display); font-size: 1.85cqw; letter-spacing: -.01em; }
+.rank__where { font-size: 1.08cqw; line-height: 1.55; color: var(--c-text); }
+.rank__price { font-family: var(--font-meta); font-weight: 900; font-size: 1.9cqw; letter-spacing: -.02em; text-align: right; white-space: nowrap; }
+.rank__price small { font-size: .95cqw; font-weight: 700; margin-left: .25cqw; }
+.rank__slots {
+  justify-self: end;
+  font-family: var(--font-meta); font-weight: 700; font-size: 1.05cqw;
+  border: var(--b-thin) solid var(--c-border); border-radius: 99cqw;
+  padding: 0.42cqw 1.1cqw; white-space: nowrap;
+}
+.rank--main { background: var(--c-ink); color: #fff; box-shadow: var(--shadow-card-sm); }
+.rank--main .rank__where { color: rgba(255,255,255,.82); }
+.rank--main .rank__slots { border-color: #fff; }
+.rank--gold { background: var(--c-yellow); }
+.rank--silver { background: #fff; }
+.rank--bronze { background: #fff; }
+.rank--beach { background: var(--c-soft); border-style: dashed; }
+.note {
+  margin-top: 1.4cqw; font-size: 1cqw; line-height: 1.7; color: var(--c-muted);
+}
+.note strong { color: var(--c-ink); }
+
+/* ── 現物を見せる2カラム ───────────────────── */
+.split { display: grid; grid-template-columns: 1.15fr .85fr; gap: 2.6cqw; align-items: stretch; flex: 1; min-height: 0; }
+.split > * { min-height: 0; }
+/* 縦に2枚積むとき: 上は元の高さ、下は残りの高さに contain で収める */
+.stack { display: flex; flex-direction: column; gap: 1.1cqw; height: 100%; min-height: 0; }
+.stack > .shot { flex: 0 0 auto; }
+.stack > .shot--fit { flex: 1 1 auto; min-height: 0; display: flex; }
+.stack > .shot--fit img { width: 100%; height: 100%; object-fit: contain; }
+.stack > .cap { flex: 0 0 auto; }
+.shot { border: var(--b-thick) solid var(--c-border); border-radius: 1.2cqw; overflow: hidden; box-shadow: var(--shadow-card); background: #fff; }
+.shot img { display: block; width: 100%; height: auto; }
+.shot--tall { height: 100%; width: fit-content; margin-inline: auto; display: flex; }
+.shot--tall img { height: 100%; width: auto; object-fit: contain; }
+.cap { font-size: 0.95cqw; line-height: 1.65; color: var(--c-muted); margin: 0.8cqw 0 0; }
+.points { display: flex; flex-direction: column; gap: 1.1cqw; margin: 0; padding: 0; list-style: none; }
+.points li {
+  border: var(--b-thin) solid var(--c-border); border-radius: 1cqw;
+  padding: 1cqw 1.3cqw; font-size: 1.1cqw; line-height: 1.7; background: #fff;
+}
+.points li b { display: block; font-family: var(--font-display); font-size: 1.15cqw; margin-bottom: .3cqw; }
+.points li.is-key { background: var(--c-yellow); }
+/* 3つ横並び。インラインで書くと、狭い画面での上書きが効かなくなる */
+.points--3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4cqw; }
+/* 3つ並びは1枚あたりの中身が少ないので、余白を厚めにして器に釣り合わせる */
+.points--3 li { padding: 1.7cqw 1.7cqw; border-width: var(--b-thick); border-radius: 1.2cqw; box-shadow: var(--shadow-card-sm); }
+.points--3 li b { font-size: 1.3cqw; margin-bottom: .6cqw; }
+
+/* インラインで書いていた寸法をクラスに移した。インラインだと狭い画面で上書きできない */
+.rank__name--long { font-size: 1.3cqw; line-height: 1.2; }
+.rk--long { font-size: .95cqw; }
+table.t--sm { font-size: 1cqw; }
+.note--tight { margin-top: 1cqw; }
+.end-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 3cqw; }
+.end-row__hand { font-size: 2.8cqw; color: var(--c-yellow); margin: 0 0 .5cqw; }
+.end-row__text { margin: 0; font-size: 1.25cqw; line-height: 1.8; color: rgba(255,255,255,.82); }
+
+/* ── 表 ───────────────────────────────────── */
+table.t { width: 100%; border-collapse: collapse; font-size: 1.05cqw; background: #fff; }
+table.t th, table.t td { border: var(--b-thin) solid var(--c-border); padding: 0.75cqw 1cqw; text-align: left; vertical-align: middle; line-height: 1.55; }
+table.t thead th { background: var(--c-ink); color: #fff; font-family: var(--font-meta); font-weight: 700; font-size: 0.98cqw; letter-spacing: .04em; }
+table.t td.rk { font-family: var(--font-display); font-size: 1.15cqw; white-space: nowrap; }
+table.t tr.is-main td { background: rgba(253,185,39,.28); }
+table.t td.num { font-family: var(--font-meta); font-weight: 700; white-space: nowrap; }
+table.t .ok { color: var(--c-blue); font-weight: 700; }
+table.t .ng { color: var(--c-red); font-weight: 700; }
+
+/* ── 流れ（6ステップ） ─────────────────────── */
+.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.3cqw; }
+.fstep {
+  border: var(--b-thick) solid var(--c-border); border-radius: 1.2cqw;
+  background: #fff; padding: 1.3cqw 1.5cqw; box-shadow: var(--shadow-card-sm);
+  display: flex; flex-direction: column; gap: .45cqw;
+}
+.fstep__no { font-family: var(--font-display); font-size: 1.5cqw; color: var(--c-red); line-height: 1; }
+.fstep__t { font-family: var(--font-display); font-size: 1.3cqw; line-height: 1.35; }
+.fstep__d { font-size: 0.98cqw; line-height: 1.65; color: var(--c-text); margin: 0; }
+.fstep--you { background: var(--c-yellow); }
+
+/* ── 入稿ルールの2カラム ───────────────────── */
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.2cqw; flex: 1; min-height: 0;
+  align-items: start;    /* カードは中身の高さで止める */
+  align-content: center; /* そのうえで、残りの余白の中央に置く */ }
+.card {
+  border: var(--b-thick) solid var(--c-border); border-radius: 1.2cqw;
+  background: #fff; padding: 1.6cqw 1.8cqw; box-shadow: var(--shadow-card-sm);
+}
+.card h3 { font-family: var(--font-display); font-size: 1.35cqw; margin: 0 0 .9cqw; }
+.card ul { margin: 0; padding-left: 1.3cqw; font-size: 1.02cqw; line-height: 1.85; }
+/* 表を持たないカードは中身が少ないので、文字を上げて器に釣り合わせる */
+.card--roomy { padding: 2.2cqw 2.4cqw; }
+.card--roomy h3 { font-size: 1.62cqw; margin-bottom: 1.2cqw; }
+.card--roomy ul { font-size: 1.22cqw; line-height: 2; padding-left: 1.5cqw; }
+.card--roomy ul li + li { margin-top: .6cqw; }
+.card--roomy .note { font-size: 1.08cqw; }
+.card ul li + li { margin-top: .3cqw; }
+
+/* ── 引用（そのまま掲載してよい文面） ───────── */
+.quote {
+  border: var(--b-thick) solid var(--c-border); border-radius: 1.2cqw;
+  background: #fff; padding: 2cqw 2.4cqw; box-shadow: var(--shadow-card);
+  font-size: 1.18cqw; line-height: 1.95;
+  color: var(--c-text);   /* 濃紺スライドの色を継がせない。白×白で消える */
+}
+.quote__label {
+  display: inline-block; font-family: var(--font-meta); font-weight: 700;
+  font-size: .92cqw; letter-spacing: .12em; background: var(--c-ink); color: #fff;
+  padding: .35cqw 0.9cqw; border-radius: 99cqw; margin-bottom: 1cqw;
+}
+
+/* ── 締めのスライド ───────────────────────── */
+.end { justify-content: center; align-items: center; text-align: center; }
+.end .h { font-size: 4.4cqw; }
+.end__chars { display: flex; align-items: flex-end; gap: 1cqw; margin-top: 3cqw; }
+.end__chars img { height: 17cqw; width: auto; }
+.end__chars img.is-kid { height: 12.2cqw; }
+
+/* ── スマートフォン ───────────────────────────
+   スライドの寸法は cqw（器の幅に対する％）で書いてあるので、幅375pxだと
+   本文が約4pxになって読めない。狭い画面では **16:9をやめて縦に流す**。
+   文字の大きさもここで px に置き換える（cqw のままだと画面幅に引きずられる）。 */
+.t-wrap { width: 100%; }
+.t-hint { display: none; }   /* 広い画面では表が収まるので出さない */
+
+@media (max-width: 900px) {
+  .deck { gap: 0; padding: 0 0 40px; }
+
+  .slide {
+    width: 100%;
+    aspect-ratio: auto;          /* 16:9 をやめる。高さは中身が決める */
+    min-height: 0;
+    border: 0; border-radius: 0;
+    border-bottom: 3px solid var(--c-ink);
+    padding: 40px 22px 56px;
+  }
+  .slide--ink { border-bottom-color: var(--c-yellow); }
+
+  /* 見出しまわり */
+  .eyebrow { font-size: 11px; gap: 8px; margin-bottom: 10px; }
+  .eyebrow b { font-size: 18px; }
+  .h { font-size: 30px; margin-bottom: 14px; }
+  .h--sm { font-size: 25px; }
+  .lead { font-size: 15px; line-height: 1.85; margin-bottom: 22px; max-width: none; }
+  .note { font-size: 12.5px; margin-top: 16px; }
+  .body { justify-content: flex-start; }
+
+  /* 通し番号とブランドは、重ねずに下端へ普通に置く */
+  .slide__no, .slide__brand { position: static; display: block; font-size: 11px; }
+  .slide__brand { margin-top: 26px; }
+  .slide__no { margin-top: 4px; }
+
+  /* 表紙 */
+  .cover { padding: 44px 22px 40px; }
+  .cover__chars { position: static; margin: 0 0 24px; gap: 4px; justify-content: flex-start; }
+  .cover__chars img { height: 110px; }
+  .cover__chars img.is-kid { height: 79px; }
+  .cover__hand { font-size: 26px; }
+  .cover__title { font-size: 40px; margin-bottom: 14px; }
+  .cover__sub { font-size: 11px; letter-spacing: .14em; margin-bottom: 18px; }
+  .cover__meta { font-size: 12px; gap: 16px; flex-wrap: wrap; }
+
+  /* ランク表：4列を積み上げる */
+  .ranks { gap: 10px; }
+  .rank {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "name price" "where where" "slots slots";
+    gap: 6px 12px; padding: 16px 18px; border-radius: 14px; border-width: 2px;
+  }
+  .rank__name  { grid-area: name;  font-size: 20px; }
+  .rank__price { grid-area: price; font-size: 21px; }
+  .rank__where { grid-area: where; font-size: 13px; }
+  .rank__slots { grid-area: slots; justify-self: start; font-size: 12px; padding: 4px 12px; border-width: 1px; }
+
+  /* 2カラムはすべて1列に */
+  .split, .cols, .flow, .points--3 { grid-template-columns: 1fr; gap: 18px; }
+  /* グリッドの子は既定で中身より小さくならない。表を内側で横スクロールさせるため 0 にする */
+  .split > *, .cols > *, .flow > *, .points--3 > * { min-width: 0; }
+  .points { gap: 10px; }
+  .points li, .points--3 li { font-size: 14px; padding: 16px 18px; border-radius: 12px; border-width: 2px; box-shadow: 4px 4px 0 0 var(--c-border); }
+  .points--3 li b { font-size: 15px; margin-bottom: 4px; }
+  .points li b { font-size: 15px; }
+
+  /* 現物写真 */
+  .stack { height: auto; gap: 12px; }
+  .stack > .shot--fit { display: block; }
+  .stack > .shot--fit img { height: auto; }
+  .shot { border-width: 2px; border-radius: 12px; box-shadow: 5px 5px 0 0 var(--c-border); }
+  .shot--tall { height: auto; width: 100%; }
+  .shot--tall img { height: auto; width: 100%; }
+  .cap { font-size: 12px; margin-top: 10px; }
+
+  /* 表は縮めず、その表だけ横に逃がす（読めなくなるより、指で送れるほうがまし） */
+  .t-hint { display: block; margin: 0 0 6px; font-size: 12px; color: var(--c-muted); font-weight: 700; }
+  .t-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+  .t-wrap table.t { min-width: 700px; font-size: 13px; }
+  table.t th, table.t td { padding: 9px 11px; border-width: 1px; }
+  table.t thead th { font-size: 12px; }
+  table.t td.rk { font-size: 14px; }
+
+  /* 申込の流れ */
+  .fstep { padding: 16px 18px; border-radius: 14px; border-width: 2px; box-shadow: 4px 4px 0 0 var(--c-border); gap: 4px; }
+  .fstep__no { font-size: 17px; }
+  .fstep__t { font-size: 17px; }
+  .fstep__d { font-size: 13.5px; }
+
+  /* カード */
+  .card { padding: 18px 20px; border-radius: 14px; border-width: 2px; box-shadow: 4px 4px 0 0 var(--c-border); }
+  .card h3 { font-size: 17px; margin-bottom: 12px; }
+  .card ul { font-size: 13.5px; padding-left: 18px; }
+  .card--roomy { padding: 20px; }
+  .card--roomy h3 { font-size: 18px; }
+  .card--roomy ul { font-size: 14.5px; line-height: 1.95; }
+  .card--roomy .note { font-size: 13px; }
+
+  /* 締めのスライド */
+  .quote { padding: 20px; border-radius: 14px; border-width: 2px; font-size: 14px; line-height: 1.9; box-shadow: 5px 5px 0 0 var(--c-border); }
+  .quote__label { font-size: 11px; padding: 4px 11px; margin-bottom: 12px; }
+  .end__chars { gap: 6px; margin-top: 22px !important; }
+  .end__chars img { height: 96px; }
+  .end__chars img.is-kid { height: 69px; }
+  .rank__name--long { font-size: 15px; }
+  .rk--long { font-size: 12.5px; }
+  table.t--sm { font-size: 13px; }
+  .note--tight { margin-top: 14px; }
+  .end-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .end-row__hand { font-size: 26px; margin-bottom: 6px; }
+  .end-row__text { font-size: 14.5px; }
+  .rank__price small { font-size: 11px; margin-left: 3px; }
+
+  .hint { display: none; }
+}
+
+/* ── 操作の案内（印刷では消える） ───────────── */
+.hint {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%);
+  font-family: var(--font-meta); font-size: 12px; color: rgba(255,255,255,.55);
+  background: rgba(0,0,0,.4); padding: 7px 14px; border-radius: 99px;
+  pointer-events: none; transition: opacity .4s;
+}
+
+/* ── スライドの最後に置く申込導線 ──
+   スライドの器（.slide）の外に置くので、中の寸法（cqw）には影響しない。
+   PDF書き出し時は下の @media print で消える。 */
+.deck-cta {
+  width: min(100%, 980px);
+  margin-top: 12px;
+  text-align: center;
+  font-family: var(--font-jp);
+  color: #fff;
+}
+.deck-cta__lead {
+  margin: 0 0 16px;
+  font-size: 15px; font-weight: 700; letter-spacing: .04em;
+}
+.deck-cta__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.deck-cta__btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 15px 28px;
+  font-size: 15px; font-weight: 700; text-decoration: none; line-height: 1.4;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,.45);
+  border-radius: 16px;
+  transition: transform .2s ease, border-color .2s ease, background .2s ease;
+}
+.deck-cta__btn:hover { transform: translateY(-2px); border-color: #fff; }
+.deck-cta__btn--primary { color: var(--c-ink); background: var(--c-yellow); border-color: var(--c-yellow); }
+.deck-cta__btn--primary:hover { background: #FFC94A; border-color: #FFC94A; }
+.deck-cta__note { margin: 18px 0 0; font-size: 13px; line-height: 1.8; color: rgba(255,255,255,.6); }
+.deck-cta__note a { color: rgba(255,255,255,.92); font-weight: 700; }
+
+/* ── 印刷（PDF書き出し）: 1枚1ページ・横向き ── */
+/* PDFのページ自体を 16:9（1280×720px = 13.333in × 7.5in）にする。
+   A4横だと 1.41:1 なので、スライドの 1.78:1 と合わず上下に帯が出る。 */
+@page { size: 338.67mm 190.5mm; margin: 0; }
+@media print {
+  body { background: #fff; }
+  .deck { display: block; padding: 0; gap: 0; }
+  .hint, .deck-cta { display: none; }
+  .slide {
+    width: 100%; height: 100vh; max-width: none;
+    border: 0; border-radius: 0;
+    break-after: page; page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .slide--ink, .slide--yellow, .slide--soft, .rank--main, .rank--gold, .fstep--you, .points li.is-key, table.t thead th, table.t tr.is-main td {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+<!-- ═══ 01 表紙 ═══ -->
+<section class="slide slide--ink cover">
+  <div class="cover__chars">
+    <img src="assets/beach-clean-lp/hero-parts/character-01.png" alt="">
+    <img src="assets/beach-clean-lp/hero-parts/character-05.png" class="is-kid" alt="">
+    <img src="assets/beach-clean-lp/hero-parts/character-04.png" alt="">
+  </div>
+  <p class="cover__hand">Clean with Fun!</p>
+  <h1 class="cover__title">スポンサー<br>加盟のご案内</h1>
+  <p class="cover__sub">YUINCHU BEACH CLEAN PROJECT · MIYAKOJIMA</p>
+  <div class="cover__meta">
+    <span>一般社団法人 結人</span>
+    <span>2026年度版</span>
+  </div>
+  <span class="slide__no">01 / 11</span>
+</section>
+
+<!-- ═══ 02 この制度の考え方 ═══ -->
+<section class="slide">
+  <p class="eyebrow"><b>01</b> OUR STANCE</p>
+  <h2 class="h">宮古島の海を守る<br><span class="mark">パートナー</span>として。</h2>
+  <p class="lead">宮古島の海をきれいにする活動を、島の人と旅の人とで続けています。続けるために必要なのは、一度の大きなご支援よりも、<strong>毎年ここにある土台</strong>です。年間スポンサーは、その1年分を一緒に支えてくださるパートナーです。</p>
+  <div class="body">
+    <ul class="points points--3">
+      <li class="is-key"><b>なぜ年額なのか</b>活動は年間を通して続き、掲出物の更新は年1回です。1年分をまとめて支えていただくことで、<strong>その年の予算が先に立ちます。</strong></li>
+      <li><b>どこに出るのか</b>活動当日の横断幕とTシャツ、そして公式サイト。<strong>ゴミを拾っている現場に、そのまま掲げます。</strong></li>
+      <li><b>特典を増やさない理由</b>SNS投稿の代行や個別イベントはお約束しません。<strong>確実に実行できることだけに絞るほうが、活動は長く続きます。</strong></li>
+    </ul>
+    <p class="note">参加そのものは<strong>どなたでも無料</strong>です。そのうえで、活動を支える方法として寄付・単発支援・年間スポンサーの3つをご用意しています。本資料は、そのうち<strong>年間スポンサー</strong>についてのご案内です。</p>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">02 / 11</span>
+</section>
+
+<!-- ═══ 03 ランク一覧 ═══ -->
+<section class="slide slide--soft">
+  <p class="eyebrow"><b>02</b> SPONSOR RANKS</p>
+  <h2 class="h h--sm">スポンサー<span class="mark">ランク</span>と募集枠</h2>
+  <div class="body">
+    <div class="ranks">
+      <div class="rank rank--main">
+        <span class="rank__name">MAIN</span>
+        <span class="rank__where">Tシャツ背面の最上部／タペストリー中央の最上位枠</span>
+        <span class="rank__price">330,000<small>円 / 年</small></span>
+        <span class="rank__slots">1社かぎり</span>
+      </div>
+      <div class="rank rank--gold">
+        <span class="rank__name">GOLD</span>
+        <span class="rank__where">Tシャツ・タペストリーの上位ロゴ枠</span>
+        <span class="rank__price">110,000<small>円 / 年</small></span>
+        <span class="rank__slots">3社</span>
+      </div>
+      <div class="rank rank--silver">
+        <span class="rank__name">SILVER</span>
+        <span class="rank__where">中段のロゴ枠。視認性と掲載数のバランスを取る枠</span>
+        <span class="rank__price">55,000<small>円 / 年</small></span>
+        <span class="rank__slots">6社</span>
+      </div>
+      <div class="rank rank--bronze">
+        <span class="rank__name">BRONZE</span>
+        <span class="rank__where">下段のロゴ枠。小さめのため、シンプルなロゴを推奨します</span>
+        <span class="rank__price">33,000<small>円 / 年</small></span>
+        <span class="rank__slots">10社</span>
+      </div>
+      <div class="rank rank--beach">
+        <span class="rank__name rank__name--long">BEACH<br>SUPPORTER</span>
+        <span class="rank__where">ロゴ枠ではなく、企業名のテキスト一覧としての掲載</span>
+        <span class="rank__price">11,000<small>円 / 年</small></span>
+        <span class="rank__slots">枠の制限なし</span>
+      </div>
+    </div>
+    <p class="note">金額はすべて<strong>税込</strong>です。掲載期間は<strong>1年間</strong>。<strong>MAIN と GOLD は枠数が限られています。</strong></p>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">03 / 11</span>
+</section>
+
+<!-- ═══ 04 どこに載るか① タペストリー ═══ -->
+<section class="slide">
+  <p class="eyebrow"><b>03</b> WHERE · 01</p>
+  <h2 class="h h--sm">タペストリー／<span class="mark">横断幕</span></h2>
+  <div class="split">
+    <div class="stack">
+      <div class="shot"><img src="assets/beach-clean-lp/support/banner.jpg" alt="ビーチクリーン会場に掲出する横断幕の実物"></div>
+      <div class="shot shot--fit"><img src="assets/beach-clean-lp/support/banner-logos.jpg" alt="横断幕のスポンサーロゴ掲載エリアの拡大"></div>
+      <p class="cap">上：全体（2,600mm × 600mm）。下：中央下部のスポンサー掲載エリアの拡大。</p>
+    </div>
+    <ul class="points">
+      <li><b>活動のたびに掲出</b>ビーチクリーンを行うたび、会場で活動中ずっと掲げられます。</li>
+      <li class="is-key"><b>遠くから見られる</b>会場での視認性を優先し、ロゴは中央下部にまとめて配置します。</li>
+      <li><b>スポンサー枠 760mm × 300mm</b>この範囲にランク順で並びます。上にあるほど大きく、遠くからでも読めます。</li>
+    </ul>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">04 / 11</span>
+</section>
+
+<!-- ═══ 05 どこに載るか② Tシャツ ═══ -->
+<section class="slide slide--soft">
+  <p class="eyebrow"><b>03</b> WHERE · 02</p>
+  <h2 class="h h--sm">Tシャツ<span class="mark">背面</span></h2>
+  <div class="split">
+    <div class="shot shot--tall"><img src="assets/beach-clean-lp/support/tshirt-back.jpg" alt="参加者が着用するTシャツ背面の実物"></div>
+    <div>
+      <ul class="points">
+        <li><b>参加者が着て歩く</b>当日の会場だけでなく、宮古島を離れたあとも着用されます。</li>
+        <li class="is-key"><b>近くで読まれる</b>横断幕と違い至近距離で見られるため、文字の読みやすさを優先して配置します。</li>
+        <li><b>スポンサー枠 355mm × 500mm</b>上から MAIN → GOLD → SILVER → BRONZE の順。<strong>並び方がそのままランクの差です。</strong></li>
+      </ul>
+      <p class="note">Tシャツは印刷できる範囲が限られるため、横断幕よりもロゴの見え方がシビアになります。BRONZE は「ロゴの細部」より「企業名として識別できること」を優先します。</p>
+    </div>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">05 / 11</span>
+</section>
+
+<!-- ═══ 06 掲載サイズ：タペストリー ═══ -->
+<section class="slide">
+  <p class="eyebrow"><b>04</b> SIZE · TAPESTRY</p>
+  <h2 class="h h--sm">タペストリーの掲載サイズ目安</h2>
+  <div class="body">
+    <p class="t-hint">→ 横にスクロールできます</p>
+      <div class="t-wrap"><table class="t">
+      <thead>
+        <tr><th style="width:13%">ランク</th><th style="width:16%">掲載枠の目安</th><th>実際の見え方</th><th style="width:29%">データ面の注意</th></tr>
+      </thead>
+      <tbody>
+        <tr class="is-main"><td class="rk">MAIN</td><td class="num">約720 × 85mm</td><td>主協賛として遠目でも認識しやすい。横断幕中央の主役になるサイズ</td><td>AI推奨。PNGは横幅4,000px以上</td></tr>
+        <tr><td class="rk">GOLD</td><td class="num">約230 × 55mm</td><td>ロゴ単体として認識しやすい。企業名が読み取れる可能性が高い</td><td>AI推奨。PNGは横幅1,500px以上</td></tr>
+        <tr><td class="rk">SILVER</td><td class="num">約230 × 42mm</td><td>シンプルなロゴなら十分認識可能。細かい英文・サブコピーは潰れやすい</td><td>AI推奨。PNGは横幅1,200px以上</td></tr>
+        <tr><td class="rk">BRONZE</td><td class="num">約130 × 30mm</td><td>近距離で確認できるサイズ。ロゴ内の細かい文字は読みにくくなる</td><td>PNGは横幅800px以上。複雑なロゴは簡略版を推奨</td></tr>
+        <tr><td class="rk rk--long">BEACH SUPPORTER</td><td class="num">企業名テキスト</td><td>ロゴではなく企業名を一覧で掲載。支援企業として自然に見える</td><td>正式表記名をテキストでご提出</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">全体 2,600mm × 600mm、スポンサー枠 760mm × 300mm を想定。<strong>記載のサイズは「最大表示枠」の目安です。</strong>実際の表示サイズは、ロゴの縦横比・余白・文字量・全体のバランスにより調整いたします。</p>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">06 / 11</span>
+</section>
+
+<!-- ═══ 07 掲載サイズ：Tシャツ ═══ -->
+<section class="slide">
+  <p class="eyebrow"><b>04</b> SIZE · T-SHIRT</p>
+  <h2 class="h h--sm">Tシャツ背面の掲載サイズ目安</h2>
+  <div class="body">
+    <p class="t-hint">→ 横にスクロールできます</p>
+      <div class="t-wrap"><table class="t">
+      <thead>
+        <tr><th style="width:13%">ランク</th><th style="width:16%">掲載枠の目安</th><th>実際の見え方</th><th style="width:29%">データ面の注意</th></tr>
+      </thead>
+      <tbody>
+        <tr class="is-main"><td class="rk">MAIN</td><td class="num">約280 × 55mm</td><td>背面の主役。主協賛として明確に伝わる</td><td>AI推奨。PNGは横幅3,000px以上</td></tr>
+        <tr><td class="rk">GOLD</td><td class="num">約90 × 40mm</td><td>協賛企業として十分に目立つ。横長ロゴとの相性が良い</td><td>AI推奨。PNGは横幅1,200px以上</td></tr>
+        <tr><td class="rk">SILVER</td><td class="num">約90 × 35mm</td><td>シンプルなロゴなら認識可能。小さなサブ文字は省略を推奨</td><td>AI推奨。PNGは横幅1,000px以上</td></tr>
+        <tr><td class="rk">BRONZE</td><td class="num">約52 × 24mm</td><td>近距離で確認できる小型表示。複雑なロゴは読みにくい</td><td>PNGは横幅800px以上。細かい文字入りは非推奨</td></tr>
+        <tr><td class="rk rk--long">BEACH SUPPORTER</td><td class="num">企業名テキスト</td><td>ロゴ枠ではなく企業名の一覧掲載。小さくても読みやすい表記を優先</td><td>正式表記名をテキストでご提出</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">ボディサイズ展開 S／M／L／XL、スポンサー枠 355mm × 500mm を想定。<strong>近距離で読まれるため、横断幕よりロゴの見え方がシビアです。</strong></p>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">07 / 11</span>
+</section>
+
+<!-- ═══ 08 ロゴデータ入稿ルール ═══ -->
+<section class="slide slide--soft">
+  <p class="eyebrow"><b>05</b> LOGO DATA</p>
+  <h2 class="h h--sm">ロゴデータの<span class="mark">入稿ルール</span></h2>
+  <div class="cols">
+    <div class="card">
+      <h3>ご提出いただく形式</h3>
+      <p class="t-hint">→ 横にスクロールできます</p>
+      <div class="t-wrap"><table class="t t--sm">
+        <thead><tr><th style="width:30%">形式</th><th style="width:22%">判断</th><th>条件</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AIデータ</strong></td><td class="ok">第一推奨</td><td>文字はアウトライン化済み／CMYK推奨／リンク画像は埋め込みか同梱</td></tr>
+          <tr><td><strong>PNG</strong></td><td>代替可</td><td>背景透過・高解像度・白フチや余白が過剰でないもの</td></tr>
+          <tr><td>JPEG・スクショ</td><td class="ng">原則不可</td><td>にじみ・背景混入・解像度不足が起きやすく、掲載品質を保てません</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note note--tight">カラー版に加えて、可能であれば<strong>白抜き版・黒単色版</strong>もご提出ください。背景色やTシャツの色に応じて、見やすいほうを使用します。</p>
+    </div>
+    <div class="card">
+      <h3>PNGでご提出の場合の最低ライン</h3>
+      <p class="t-hint">→ 横にスクロールできます</p>
+      <div class="t-wrap"><table class="t t--sm">
+        <thead><tr><th style="width:38%">ランク</th><th>タペストリー用</th><th>Tシャツ用</th></tr></thead>
+        <tbody>
+          <tr class="is-main"><td class="rk">MAIN</td><td class="num">4,000px 以上</td><td class="num">3,000px 以上</td></tr>
+          <tr><td class="rk">GOLD</td><td class="num">1,500px 以上</td><td class="num">1,200px 以上</td></tr>
+          <tr><td class="rk">SILVER</td><td class="num">1,200px 以上</td><td class="num">1,000px 以上</td></tr>
+          <tr><td class="rk">BRONZE</td><td class="num">800px 以上</td><td class="num">800px 以上</td></tr>
+          <tr><td class="rk rk--long">BEACH SUPPORTER</td><td colspan="2" style="text-align:center;">ロゴ不要（企業名テキストのみ）</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note note--tight">いずれも<strong>横幅</strong>の目安です。印刷では画面より細部が出るため、余裕のあるデータをお願いしています。</p>
+    </div>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">08 / 11</span>
+</section>
+
+<!-- ═══ 09 データの送り方 ═══ -->
+<section class="slide">
+  <p class="eyebrow"><b>06</b> HOW TO SEND</p>
+  <h2 class="h h--sm">データの送り方のお願い</h2>
+  <p class="lead">ロゴは<strong>送り方ひとつで画質が落ちます。</strong>せっかくのロゴがぼやけて印刷されてしまうことを防ぐため、次の方法でお送りください。</p>
+  <div class="cols">
+    <div class="card card--roomy" style="border-color:var(--c-blue);">
+      <h3 style="color:var(--c-blue);">推奨する送り方</h3>
+      <ul>
+        <li>AIデータ一式は <strong>ZIP にまとめて</strong>ご提出ください。</li>
+        <li>PNG は<strong>リサイズ・圧縮せず、原寸のまま</strong>お送りください。</li>
+        <li>Google Drive・Dropbox・OneDrive・ファイル便など、<strong>元データをそのままダウンロードできる方法</strong>をご利用ください。</li>
+        <li>ファイル名は「<strong>企業名_ランク_ロゴ種別</strong>」（例: 結人商事_GOLD_カラー）でお願いします。</li>
+      </ul>
+    </div>
+    <div class="card card--roomy" style="border-color:var(--c-red);">
+      <h3 style="color:var(--c-red);">お控えいただきたい送り方</h3>
+      <ul>
+        <li><strong>LINE での画像送信</strong></li>
+        <li><strong>Instagram の DM</strong></li>
+        <li><strong>メール本文への画像の貼り付け</strong></li>
+        <li><strong>スクリーンショットでの送付</strong></li>
+      </ul>
+      <p class="note note--tight">いずれも送信時に自動で圧縮され、解像度が落ちます。<strong>元のロゴがどれだけ綺麗でも、印刷時にぼやけてしまいます。</strong></p>
+    </div>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">09 / 11</span>
+</section>
+
+<!-- ═══ 10 申込から掲載までの流れ ═══ -->
+<section class="slide slide--soft">
+  <p class="eyebrow"><b>07</b> FLOW</p>
+  <h2 class="h h--sm">お申し込みから<span class="mark">掲載</span>まで</h2>
+  <div class="body">
+    <div class="flow">
+      <div class="fstep fstep--you">
+        <span class="fstep__no">01</span>
+        <span class="fstep__t">ランクを選ぶ</span>
+        <p class="fstep__d">ご希望のランクをお選びいただき、正式表記名とご担当者さまの情報をご提出ください。</p>
+      </div>
+      <div class="fstep fstep--you">
+        <span class="fstep__no">02</span>
+        <span class="fstep__t">お申し込み・ご入金</span>
+        <p class="fstep__d">申込書またはフォームをご提出のうえ、協賛金をお支払いいただきます。</p>
+      </div>
+      <div class="fstep fstep--you">
+        <span class="fstep__no">03</span>
+        <span class="fstep__t">ロゴデータのご提出</span>
+        <p class="fstep__d">AIデータまたは背景透過PNGを、前ページの方法でお送りください。</p>
+      </div>
+      <div class="fstep">
+        <span class="fstep__no">04</span>
+        <span class="fstep__t">事務局で版下を調整</span>
+        <p class="fstep__d">ロゴの比率と視認性を確認し、デザインへ反映します。</p>
+      </div>
+      <div class="fstep">
+        <span class="fstep__no">05</span>
+        <span class="fstep__t">最終確認</span>
+        <p class="fstep__d">必要に応じて、掲載イメージをご確認いただきます。</p>
+      </div>
+      <div class="fstep">
+        <span class="fstep__no">06</span>
+        <span class="fstep__t">制作・掲出・配布</span>
+        <p class="fstep__d">タペストリーとTシャツを制作し、活動時に掲出・配布します。</p>
+      </div>
+    </div>
+    <p class="note note--tight"><strong>黄色の3つがスポンサーさまにお願いする工程です。</strong>04以降は事務局で進めます。</p>
+  </div>
+  <span class="slide__brand">YUINCHU</span>
+  <span class="slide__no">10 / 11</span>
+</section>
+
+<!-- ═══ 11 注意事項・締め ═══ -->
+<section class="slide slide--ink">
+  <p class="eyebrow"><b>08</b> PLEASE NOTE</p>
+  <h2 class="h h--sm" style="color:#fff;">掲載調整についての<br>お願い</h2>
+  <div class="body" style="justify-content:space-between;">
+    <div class="quote">
+      <span class="quote__label">申込時・ロゴ提出時に共有する内容</span>
+      <p style="margin:0;">掲載サイズは各ランクの最大表示枠の目安です。実際のロゴ表示サイズは、ロゴの縦横比・余白・視認性・全体デザインのバランスにより調整いたします。低解像度データ、細かい文字を含むロゴ、背景付き画像の場合、掲載品質確保のため表示方法を調整する場合があります。BEACH SUPPORTER は、企業ロゴではなく企業名テキスト一覧での掲載を基本とします。</p>
+    </div>
+    <div class="end-row">
+      <div>
+        <p class="hand end-row__hand">Let's keep it blue.</p>
+        <p class="end-row__text">宮古島の海を守る活動を、一緒に続けてください。<br>ご不明な点はお気軽にお問い合わせください。</p>
+      </div>
+      <div class="end__chars" style="margin:0;">
+        <img src="assets/beach-clean-lp/hero-parts/character-03.png" alt="">
+        <img src="assets/beach-clean-lp/hero-parts/character-06.png" alt="">
+        <img src="assets/beach-clean-lp/hero-parts/character-02.png" alt="">
+      </div>
+    </div>
+  </div>
+  <span class="slide__brand">YUINCHU BEACH CLEAN PROJECT</span>
+  <span class="slide__no">11 / 11</span>
+</section>
+
+<!-- スライドの外。PDF書き出しには出ない -->
+<div class="deck-cta">
+  <p class="deck-cta__lead">お申し込み・ご相談はこちらから</p>
+  <div class="deck-cta__actions">
+    <a href="sponsor-form.html" class="deck-cta__btn deck-cta__btn--primary">お申し込みフォームへ</a>
+    <a href="beach-clean.html#form" class="deck-cta__btn">お問い合わせ</a>
+  </div>
+  <p class="deck-cta__note">お申し込みの前に<a href="terms.html">スポンサー利用規約</a>をご確認ください。</p>
+</div>
+
+</div>
+
+<div class="hint" id="hint">← → キーでスライド送り／ ⌘P（Ctrl+P）でPDFに書き出せます</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var hint = document.getElementById('hint');
+
+  // 現在いちばん画面の中央に近いスライドの番号を返す
+  function currentIndex() {
+    var mid = window.innerHeight / 2, best = 0, bestDist = Infinity;
+    slides.forEach(function (s, i) {
+      var r = s.getBoundingClientRect();
+      var d = Math.abs((r.top + r.bottom) / 2 - mid);
+      if (d < bestDist) { bestDist = d; best = i; }
+    });
+    return best;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var i = currentIndex(), next = null;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') next = i + 1;
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp'   || e.key === 'PageUp') next = i - 1;
+    if (e.key === 'Home') next = 0;
+    if (e.key === 'End') next = slides.length - 1;
+    if (next === null) return;
+    e.preventDefault();
+    next = Math.max(0, Math.min(slides.length - 1, next));
+    slides[next].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+
+  // 案内は数秒で消す（読み終わったあとは邪魔になるため）
+  setTimeout(function () { hint.style.opacity = '0'; }, 6000);
+})();
+</script>
+
+</body>
+</html>

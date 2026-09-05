@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="description" content="一般社団法人 結人の運営法人情報と理事紹介ページです。">
+  <title>運営法人｜一般社団法人 結人</title>
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="style_dive-a.css?v=260905-28">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════════════════════
+       運営法人ページ｜トップと同じ土台（style_dive-a.css）に乗せる。
+
+       ■ トップとの違いはひとつだけ
+         トップは映像がスクロールで動く。ここは静止画で止まっている。
+         下層まで動かすと体験が重なるうえ、6.4MBの映像を全ページで
+         読ませることになるため（2026-09-05 に決めた）。
+       ══════════════════════════════════════════════════════════ */
+
+    /* 水の色は固定。トップのように深さで変わらない */
+    .dive-tint { opacity: 0.44; }
+
+    /* ── 入口｜法人名とひとこと ───────────────────────── */
+    .sc--head { justify-content: center; text-align: center; min-height: 78svh; }
+    .head__inner { width: 100%; }
+    .head__logo {
+      width: min(280px, 72%);
+      margin: 0 auto 30px;
+      filter: brightness(0) invert(1);
+      opacity: 0.94;
+    }
+    .head__lead {
+      margin: 0;
+      font-size: var(--fs-small);
+      line-height: 2.05;
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    /* ── 理事｜代表を1枚大きく、続く4名を2列で ─────────── */
+    .members { display: grid; gap: 24px; }
+    /* 代表は他の理事より一段だけ大きく。並べたときに序列が分かる程度に留める */
+    .member-lead figure { margin: 0; width: min(60%, 260px); }
+    .member-lead img {
+      width: 100%;
+      height: clamp(160px, 21vh, 208px);
+      object-fit: cover;
+      object-position: center 22%;
+    }
+    .member__name {
+      margin: 14px 0 0;
+      font-family: var(--font-serif);
+      font-size: var(--fs-sub);
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .member__role {
+      margin: 2px 0 0;
+      font-size: var(--fs-label);
+      letter-spacing: 0.14em;
+      color: var(--sand);
+    }
+    .member-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px 18px;
+    }
+    .member-grid figure { margin: 0; }
+    .member-grid img {
+      width: 100%;
+      height: clamp(132px, 18vh, 172px);
+      object-fit: cover;
+      object-position: center 22%;
+    }
+    /* 写真の無い理事は、空の箱を並べずに名前だけの行にする */
+    .member-rest { display: grid; gap: 0; margin-top: 6px; }
+    .member-rest > div {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      padding: 15px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.24);
+    }
+    .member-rest > div:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.24); }
+    .member-rest .member__name { margin: 0; }
+    .member-rest .member__role { margin: 0; }
+
+    /* ── 理事プロフィール｜読み物として罫線で区切る ───────── */
+    .profiles { display: grid; gap: 34px; }
+    .profile { display: grid; gap: 12px; }
+    .profile__role {
+      margin: 0;
+      font-family: var(--font-en);
+      font-size: 0.82rem;
+      letter-spacing: 0.2em;
+      color: var(--sand);
+    }
+    .profile__name {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: var(--fs-sub);
+      font-weight: 500;
+    }
+    .profile__meta {
+      margin: 0;
+      padding-left: 16px;
+      border-left: 1px solid rgba(255, 255, 255, 0.34);
+      font-size: var(--fs-small);
+      line-height: 1.95;
+      color: rgba(255, 255, 255, 0.78);
+    }
+    .profile p { margin: 0; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.84); }
+    .profile__links { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+    .profile__links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding-bottom: 3px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.34);
+      font-size: var(--fs-small);
+      transition: border-color 400ms ease;
+    }
+    .profile__links a::after { content: ''; width: 16px; height: 1px; background: currentColor; }
+    .profile__links a:hover { border-color: #fff; }
+    .profile__pending { color: rgba(255, 255, 255, 0.6); }
+
+    /* ── 締め｜トップへ戻る ───────────────────────────── */
+    .sc--back { justify-content: center; text-align: center; min-height: 0; padding-block: clamp(40px, 6vh, 74px) clamp(70px, 11vh, 130px); }
+
+    @media (min-width: 768px) {
+      .member-grid { gap: 24px 20px; }
+      .profiles { gap: 40px; }
+    }
+
+    /* ⚠️ 広い画面では左下にロゴが固定で出るので、入口のロゴは消す。
+       両方出すと同じロゴが2つ並ぶ（フッターのロゴと同じ理由）。 */
+    @media (min-width: 1100px) {
+      .head__logo { display: none; }
+      .sc--head { min-height: 66svh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 背景。トップと同じ組み方だが、動かさず1コマで止めている -->
+  <div class="dive-stage" aria-hidden="true">
+    <div class="dive-ambient">
+      <img src="assets/dive/dive-reef.jpg" alt="">
+    </div>
+    <div class="dive-window" id="dive-window">
+      <img src="assets/dive/dive-reef.jpg" alt="">
+    </div>
+    <div class="dive-tint"></div>
+  </div>
+
+  <p class="side-copy" aria-hidden="true">宮古島の美しい海・文化・人を次世代へ</p>
+  <a class="side-logo" href="index.html" aria-label="一般社団法人 結人 トップへ">
+    <img src="assets/footer-logo.png" alt="">
+  </a>
+
+  <header class="site-header" id="top">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html" aria-label="一般社団法人 結人 トップへ">YUINCHU</a>
+      <nav class="global-nav" id="global-nav" aria-label="サイトナビゲーション">
+        <a href="index.html">TOP</a>
+        <a href="index.html#philosophy">PHILOSOPHY</a>
+        <a href="index.html#sustainability">SUSTAINABILITY</a>
+        <a href="index.html#beach-clean">BEACH CLEAN</a>
+        <a href="index.html#co-creation">CO-CREATION</a>
+        <a href="index.html#company">ABOUT</a>
+        <a href="index.html#contact">CONTACT</a>
+      </nav>
+      <button class="menu-button" id="menu-button" type="button" aria-label="メニューを開閉" aria-controls="global-nav" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ── 1. 入口 ─────────────────────────────────────── -->
+    <section class="sc sc--head" aria-labelledby="about-title">
+      <div class="head__inner readable">
+        <img class="head__logo" src="assets/footer-logo.png" alt="">
+        <h1 class="t-lead" id="about-title" lang="ja">運営法人</h1>
+        <p class="head__lead">宮古島の美しい海と文化、人とのつながりを未来へつなぐために活動する地域共創団体です。</p>
+      </div>
+    </section>
+
+    <!-- ── 2. 理事紹介｜代表を1枚大きく、続く4名を2列で ──── -->
+    <section class="sc sc--members" aria-labelledby="members-title">
+      <div class="readable" data-motion="slide">
+        <p class="rail rail--flat" aria-hidden="true">BOARD MEMBERS</p>
+        <h2 class="t-lead" id="members-title" lang="ja">理事紹介</h2>
+        <div class="members">
+          <div class="member-lead">
+            <figure>
+              <img src="assets/directors/torizuka-kentaro.jpg" alt="鳥塚 健太郎" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">鳥塚 健太郎</p>
+                <p class="member__role">代表理事</p>
+              </figcaption>
+            </figure>
+          </div>
+          <div class="member-grid">
+            <figure>
+              <img src="assets/directors/sekino-yuya.jpg" alt="関野 佑也" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">関野 佑也</p>
+                <p class="member__role">理事</p>
+              </figcaption>
+            </figure>
+            <figure>
+              <img src="assets/directors/koga-yutaro.jpg" alt="古賀 裕太郎" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">古賀 裕太郎</p>
+                <p class="member__role">理事</p>
+              </figcaption>
+            </figure>
+            <figure>
+              <img src="assets/directors/kanazawa-daiki.jpg" alt="金沢 大基" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">金沢 大基</p>
+                <p class="member__role">理事</p>
+              </figcaption>
+            </figure>
+            <figure>
+              <img src="assets/directors/sekino-shuhei.jpg" alt="関野 秀平" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">関野 秀平</p>
+                <p class="member__role">理事</p>
+              </figcaption>
+            </figure>
+          </div>
+          <!-- 写真がまだ無い2名。空の箱を並べず、名前の行にする -->
+          <div class="member-rest">
+            <div>
+              <p class="member__name" lang="ja">平岩 拓路</p>
+              <p class="member__role">理事</p>
+            </div>
+            <div>
+              <p class="member__name" lang="ja">倉成 雄介</p>
+              <p class="member__role">理事</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. 理事プロフィール｜読み物 ─────────────────── -->
+    <section class="sc sc--profiles" aria-labelledby="profiles-title">
+      <div class="readable" data-motion="lines">
+        <p class="rail rail--flat" aria-hidden="true">DIRECTOR PROFILE</p>
+        <h2 class="t-lead" id="profiles-title" lang="ja">理事プロフィール</h2>
+        <div class="profiles">
+          <article class="profile">
+            <p class="profile__role">Representative</p>
+            <h3 class="profile__name" lang="ja">鳥塚 健太郎</h3>
+            <p class="profile__pending">紹介文を追加予定です。</p>
+          </article>
+          <article class="profile">
+            <p class="profile__role">Director</p>
+            <h3 class="profile__name" lang="ja">金沢 大基</h3>
+            <p>株式会社iD／株式会社cica 代表取締役。JTB、広告会社、メディア会社を経て2013年に株式会社iDを創業。旅・食・地域をテーマに事業を展開し、2019年には害獣扱いされていた広島県安芸高田市の鹿を「Premium DEER 安芸高田鹿」としてブランド化。2024年に株式会社cicaを設立し地域資源を活用したプロジェクトを多数手がける。現在は食育や探究学習、地域共創を推進するとともに、宮古島の海洋環境をテーマにした新たな活動にも取り組んでいる。</p>
+            <ul class="profile__links">
+              <li><a href="https://id-project.jp" target="_blank" rel="noopener">株式会社iD</a></li>
+              <li><a href="https://cica-project.jp" target="_blank" rel="noopener">株式会社cica</a></li>
+            </ul>
+          </article>
+          <article class="profile">
+            <p class="profile__role">Director</p>
+            <h3 class="profile__name" lang="ja">関野 佑也</h3>
+            <p class="profile__meta">中小企業診断士（経済産業大臣登録）<br>東京都活性化協議会専門家<br>株式会社MCO Lotus代表取締役<br>株式会社wildside執行役員</p>
+            <p>飲食、宿泊業専門経営コンサルタントとして、事業再生から組織改革、経営戦略立案まで行う。プロデューサーとして映画製作を行っており、宮古島では、マリンショップ、居酒屋ブランド粋蓮を展開。2026年5月からDMMオンラインサロンを開設、「現場で使える経営学」を展開している。</p>
+            <ul class="profile__links">
+              <li><a href="https://www.mco-lotus.com" target="_blank" rel="noopener">株式会社MCO Lotus</a></li>
+              <li><a href="https://owakarenouta-movie.com" target="_blank" rel="noopener">株式会社wildside</a></li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. 法人概要 ─────────────────────────────────── -->
+    <section class="sc sc--company" aria-labelledby="profile-title">
+      <div class="company__inner readable" data-motion="stack">
+        <p class="rail rail--flat" aria-hidden="true">PROFILE</p>
+        <h2 class="t-mid" id="profile-title" lang="ja">法人概要</h2>
+        <dl class="company__table">
+          <div><dt>法人名</dt><dd>一般社団法人 結人</dd></div>
+          <div><dt>設立日</dt><dd>2026年1月7日</dd></div>
+          <div><dt>所在地</dt><dd>〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ── 5. 戻る ─────────────────────────────────────── -->
+    <section class="sc sc--back">
+      <a class="link-arrow" href="index.html#philosophy" data-motion="pop">トップへ戻る</a>
+    </section>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <img src="assets/footer-logo.png" alt="一般社団法人 結人" width="150">
+        <p>運営法人：一般社団法人 結人</p>
+        <address>住 所：〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</address>
+        <p class="footer__copy">&copy;2026 一般社団法人 結人. All rights reserved.</p>
+      </div>
+    </footer>
+
+  </main>
+
+  <script>
+    // ── メニュー ───────────────────────────────────────
+    const menuButton = document.getElementById('menu-button');
+    const globalNav = document.getElementById('global-nav');
+    const header = document.querySelector('.site-header');
+
+    menuButton.addEventListener('click', () => {
+      const isOpen = globalNav.classList.toggle('is-open');
+      menuButton.classList.toggle('is-active', isOpen);
+      document.body.classList.toggle('is-menu-open', isOpen);
+      menuButton.setAttribute('aria-expanded', String(isOpen));
+    });
+    globalNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        globalNav.classList.remove('is-open');
+        menuButton.classList.remove('is-active');
+        document.body.classList.remove('is-menu-open');
+        menuButton.setAttribute('aria-expanded', 'false');
+      });
+    });
+    const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    // ── 文字の出現 ─────────────────────────────────────
+    // 隠す指定は JS 側から当てる。JS を切っても文字は読める。
+    // ⚠️ IntersectionObserver を使わない。監視が発火しないまま通り過ぎると、
+    //    その節の文字が隠れたまま残る（2026-09-05 にトップで実際に起きた）。
+    //    スクロールのたびに位置を見て、画面に入った／通り過ぎたものは必ず出す。
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const targets = document.querySelectorAll('[data-motion]');
+      targets.forEach((el) => el.classList.add('mo'));
+      let pending = Array.from(targets);
+
+      const sweep = () => {
+        if (!pending.length) return;
+        const vh = window.innerHeight;
+        pending = pending.filter((el) => {
+          const rect = el.getBoundingClientRect();
+          if ((rect.top < vh * 0.92 && rect.bottom > 0) || rect.bottom <= 0) {
+            el.classList.add('is-in');
+            return false;
+          }
+          return true;
+        });
+      };
+
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { sweep(); ticking = false; });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      sweep();
+    }
+  </script>
+</body>
+</html>
