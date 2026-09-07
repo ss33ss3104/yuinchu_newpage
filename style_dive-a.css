@@ -1056,6 +1056,25 @@ main {
 .side-copy,
 .side-logo { display: none; }
 
+/* 詳細本文は画面幅にかかわらず同じ密度で組む。
+   見出しとの間に小さな段差をつけ、最終行以外の左右を揃える。
+   auto-phrase はjustify時の字間を広げすぎるため、本文だけ通常の折り返しに戻す。 */
+.philosophy__body > p,
+.act__text,
+.beach__text > p,
+.cocreation__head > p:not(.rail),
+.ruled dd,
+.product__body > p:not(.rail),
+.company__lead {
+  padding-inline-start: 0.7em;
+  font-size: 13.5px;
+  line-height: 1.9;
+  text-align: justify;
+  text-align-last: left;
+  word-break: normal;
+  line-break: strict;
+}
+
 
 /* ══════════════════════════════════════════════════════════════
    スマホ（〜767px）：映像を全面に敷く。縦の映像と縦の画面なので
@@ -1112,6 +1131,9 @@ main {
 
   .sc { padding-block: clamp(84px, 14vh, 130px); }
   .sc--break { min-height: 118svh; }
+
+  /* 指定した見出しだけ意味単位で改行する。PCでは通常のインライン表示。 */
+  .mobile-line { display: block; }
 }
 
 
@@ -1170,6 +1192,19 @@ main {
     grid-template-columns: 130px 1fr;
     gap: 18px;
     align-items: baseline;
+  }
+}
+
+/* 高さの低いPCでは「3つの活動」の本文列が狭くなる。
+   この列だけ均等割付を外し、不自然な縦長の文字組みを避ける。 */
+@media (min-width: 768px) and (max-height: 799px) {
+  .act__text {
+    padding-inline-start: 0;
+    line-height: 1.85;
+    text-align: left;
+    text-align-last: auto;
+    word-break: auto-phrase;
+    line-break: auto;
   }
 }
 
@@ -1296,6 +1331,7 @@ main {
     opacity: 1 !important;
     animation: none !important;
   }
+  .hero__marquee-track,
   .beach__track { animation: none !important; }
   .mo, .mo.is-in, .mo > *, .mo.is-in > * {
     opacity: 1 !important;

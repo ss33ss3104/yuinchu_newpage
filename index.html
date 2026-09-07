@@ -10,7 +10,7 @@
   <!-- ⚠️ CSS より先に置く。あとから付けると、隠す前の文字が一瞬見えてしまう。
        JS を切ればこのクラスは付かず、見出しは最初から読める -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="style_dive-a.css?v=260905-46">
+  <link rel="stylesheet" href="style_dive-a.css?v=260907-type-1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
@@ -82,7 +82,7 @@
       <div class="philosophy__grid">
         <p class="rail" aria-hidden="true">PHILOSOPHY</p>
         <div class="philosophy__body readable" data-motion="lines">
-          <h2 class="t-lead">宮古島の美しい海、文化、人のつながりを次の世代へつないでいきたい。</h2>
+          <h2 class="t-lead"><span class="mobile-line">宮古島の美しい海、文化、</span><span class="mobile-line">人のつながりを次の世代へ</span><span class="mobile-line">つないでいきたい。</span></h2>
           <p>世界を代表するビーチリゾート宮古島。海は「宮古ブルー」といわれるほど美しく、この海で生きるウミガメやサンゴをはじめ、この地で生きる動植物、育まれてきた文化や人の営みは、宮古島の豊かな自然があったからこそ存在しています。</p>
           <p>私たち一般社団法人 結人は、この美しく豊かな宮古島に魅了され、次の世代へとつないでいきたいと思っています。</p>
           <p>人と人を結び、信頼を築き、経営者としての行動力と想いで新しい価値を生み出していく。この挑戦は、自分たちの利益だけではなく、この島の豊かさを未来へとつないでいくためにあります。</p>
@@ -178,7 +178,7 @@
     <section class="sc sc--product" data-window="center-md" data-tint="38">
       <div class="product__body readable" data-motion="unveil">
         <p class="rail rail--flat" aria-hidden="true">BUSINESS PRODUCT</p>
-        <h2 class="t-lead">宮古島の資源から、新たな事業と商品を生み出す。</h2>
+        <h2 class="t-lead"><span class="mobile-line">宮古島の資源から、</span><span class="mobile-line">新たな事業と商品を生み出す。</span></h2>
         <p>宮古島には豊かな自然、美しい海と風土から生まれた農作物や商品が様々あります。ビジネスマッチングを通して新たなプロダクトを生み出すこと。新規事業や新たなサービスを構築していく予定です。</p>
       </div>
     </section>
@@ -190,7 +190,7 @@
         <p class="company__lead">宮古島の自然、文化、人の営みを未来へつなぐために、環境保全活動、地域連携、事業共創に取り組んでいます。</p>
         <dl class="company__table">
           <div><dt>法人名</dt><dd>一般社団法人 結人</dd></div>
-          <div><dt>所在地</dt><dd>〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</dd></div>
+          <div><dt>所在地</dt><dd>〒906-0013<br>沖縄県宮古島市平良下里545-2-103</dd></div>
         </dl>
       </div>
     </section>
@@ -240,23 +240,39 @@
       <div class="footer__inner">
         <img src="assets/footer-logo.png" alt="一般社団法人 結人" width="180">
         <p>運営法人：一般社団法人 結人</p>
-        <address>住 所：〒906-0013<br>沖縄県宮古島市平良下里545-2 与古田ハイツ103</address>
+        <address>住 所：〒906-0013<br>沖縄県宮古島市平良下里545-2-103</address>
         <p class="footer__copy">&copy;2026 一般社団法人 結人. All rights reserved.</p>
       </div>
     </footer>
 
   </main>
 
-  <script src="dive.js?v=260905-4"></script>
+  <script src="dive.js?v=260907-hybrid-1"></script>
   <script>
     // ── 潜水映像のスクロール連動 ────────────────────────
-    // ページ全体のスクロール 0〜100% を、映像の 0〜15秒に割り当てる。
-    // 一番下まで読むと、ちょうどウミガメの正面にたどり着く。
+    // 映像時刻だけを指定する。既存の data-window / data-tint は表示状態を担当する。
+    // 原則は見出し中央が画面上端から45%に来る位置。point: 1 は要素の末尾。
+    const syncAnchors = [
+      { page: 'start', time: 0.00 },                                      // Hero
+      { selector: '#philosophy h2', time: 2.00 },                         // 理念
+      { selector: '#sustainability h2', time: 4.75 },                      // 持続可能性
+      { selector: '.sc--acts h3', time: 6.00 },                           // 3つの活動
+      { selector: '#beach-clean h2', time: 8.25 },                        // ビーチクリーン
+      { selector: '#co-creation h2', time: 9.50 },                        // 共創
+      { selector: '.sc--product h2', time: 11.00 },                       // プロダクト
+      { selector: '#company h2', time: 12.00 },                           // 法人概要
+      { selector: '#contact summary', time: 13.00 },                     // 問い合わせ開始
+      { selector: '#contact .ask', point: 1, time: 13.00 },               // 問い合わせ終了
+      { selector: '.closing', viewport: 0.75, time: 14.50 },               // 末尾でも届く読書位置
+      { page: 'end', time: 15.00 }
+    ];
+    // 比較用: ?sync=global なら従来のページ全体比例。指定なしはHybrid。
     initDive({
       main: document.getElementById('dive'),
       ambient: document.getElementById('dive-bg'),
       windowEl: document.getElementById('dive-window'),
-      tintEl: document.getElementById('dive-tint')
+      tintEl: document.getElementById('dive-tint'),
+      syncAnchors: new URLSearchParams(location.search).get('sync') === 'global' ? null : syncAnchors
     });
 
     // ── メニュー ───────────────────────────────────────

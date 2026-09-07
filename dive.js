@@ -1,7 +1,7 @@
 /* ══════════════════════════════════════════════════════════════
    潜水映像のスクロール連動（案A・案B 共通）
 
-   ページのスクロール量 0〜100% を、映像の 0秒〜最後 に割り当てる。
+   syncAnchors があれば対応点の間を線形補間し、なければページ全体を比例対応させる。
    一番上が浜辺、一番下がウミガメ。読み進める速さが、そのまま潜る速さになる。
 
    ■ なぜ映像を「再生」せずに currentTime を書き換えるのか
@@ -33,6 +33,9 @@ function initDive(refs) {
   const tintEl = refs.tintEl;
   const sections = Array.from(document.querySelectorAll('[data-window]'));
 
+  // 静止表示でも使う状態は、reduced-motion の分岐より先に初期化する。
+  let lastState = '';
+
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ── 動きを止める設定の人には、最初のコマだけ見せて終わり ── */
@@ -46,7 +49,6 @@ function initDive(refs) {
   let target = 0;
   let current = 0;
   let frame = 0;
-  let lastState = '';
   let lastTint = -1;
 
   /* ── 映像の長さが分かったら、そこからコマ送りを始める ──
@@ -75,9 +77,21 @@ function initDive(refs) {
   wake(ambient);
 
   /* ── セクションの位置を測る ──────────────────────────
-     文字の折り返しが変わると高さも変わるので、リサイズのたびに測り直す。 */
+     画面のリサイズに加え、問い合わせの開閉などで本文の高さが変わったときも測り直す。 */
   let bounds = [];
   let scrollMax = 1;
+  let syncBounds = [];
+  const syncPoints = (refs.syncAnchors || []).map((point) => ({
+    ...point,
+    el: point.selector ? document.querySelector(point.selector) : null
+  }));
+
+  // 出現アニメーションの transform を含めず、本文上の位置を測る。
+  function layoutPoint(el, point) {
+    let top = 0;
+    for (let node = el; node; node = node.offsetParent) top += node.offsetTop;
+    return top + el.offsetHeight * point;
+  }
 
   function measure() {
     scrollMax = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -91,6 +105,30 @@ function initDive(refs) {
         tint: Number(el.dataset.tint || 0)
       };
     });
+    syncBounds = syncPoints.map((point) => {
+      let y;
+      if (point.page === 'start') y = 0;
+      else if (point.page === 'end') y = scrollMax;
+      else if (point.el) {
+        y = layoutPoint(point.el, point.point ?? 0.5) - window.innerHeight * (point.viewport ?? 0.45);
+      } else return null;
+      return { y: Math.min(scrollMax, Math.max(0, y)), time: point.time };
+    }).filter(Boolean).sort((a, b) => a.y - b.y)
+      // 到達可能範囲への制限で同じ位置になった点は、後の点にまとめる。
+      .filter((point, i, points) => i === points.length - 1 || point.y < points[i + 1].y);
+  }
+
+  function timeAt(y) {
+    if (y <= syncBounds[0].y) return syncBounds[0].time;
+    for (let i = 1; i < syncBounds.length; i++) {
+      const from = syncBounds[i - 1];
+      const to = syncBounds[i];
+      if (y <= to.y) {
+        const ratio = (y - from.y) / (to.y - from.y);
+        return from.time + (to.time - from.time) * ratio;
+      }
+    }
+    return syncBounds[syncBounds.length - 1].time;
   }
 
   let resizeTimer = 0;
@@ -98,6 +136,10 @@ function initDive(refs) {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(measure, 160);
   });
+
+  // 本文全体のサイズ変更だけを監視する。measure は読み取りのみで、DOMを変更しない。
+  const contentResizeObserver = new ResizeObserver(measure);
+  contentResizeObserver.observe(document.body);
 
   /* ── 窓の状態を切り替える ────────────────────────────
      位置と大きさは CSS の transform だけで動かす。
@@ -145,7 +187,7 @@ function initDive(refs) {
     const progress = Math.min(1, Math.max(0, y / scrollMax));
 
     if (duration > 0) {
-      target = progress * duration;
+      target = syncBounds.length ? Math.min(duration, timeAt(y)) : progress * duration;
       current += (target - current) * SETTINGS.ease;
       if (Math.abs(target - current) < SETTINGS.snap) current = target;
 
@@ -238,6 +280,7 @@ function initDive(refs) {
   }
 
   window.addEventListener('load', measure);
+  if (syncPoints.length && document.fonts) document.fonts.ready.then(measure);
 
   /* ── 開始 ────────────────────────────────────────────
      映像を待たない。窓と文字は先に動く。 */
