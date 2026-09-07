@@ -1066,7 +1066,7 @@ main {
 .ruled dd,
 .product__body > p:not(.rail),
 .company__lead {
-  padding-inline-start: 0.7em;
+  padding-inline: 0.7em;
   font-size: 13.5px;
   line-height: 1.9;
   text-align: justify;
@@ -1199,7 +1199,7 @@ main {
    この列だけ均等割付を外し、不自然な縦長の文字組みを避ける。 */
 @media (min-width: 768px) and (max-height: 799px) {
   .act__text {
-    padding-inline-start: 0;
+    padding-inline: 0;
     line-height: 1.85;
     text-align: left;
     text-align-last: auto;
