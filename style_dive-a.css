@@ -1134,6 +1134,20 @@ main {
   /* ⚠️ 社名はメニューの上に残す。消えると、開いた瞬間どのサイトか分からなくなる */
   .brand { position: relative; z-index: 68; }
 
+  /* FVのマーキーは装飾として細く見せる。上下の罫線も既存マスクで端を溶かす。 */
+  .hero__marquee {
+    padding-block: 5px;
+    border-block: 1px solid rgba(255, 255, 255, 0.28);
+  }
+  .hero__marquee-item {
+    font-family: var(--font-serif);
+    font-size: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.62);
+  }
+
   .sc { padding-block: clamp(84px, 14vh, 130px); }
   .sc--break { min-height: 118svh; }
 
