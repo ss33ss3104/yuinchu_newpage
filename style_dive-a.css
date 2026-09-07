@@ -1001,8 +1001,13 @@ main {
 /* 3つの行動｜英字が主役。詰めて積む */
 .act { padding: 20px 0; }
 
-/* ビーチクリーン｜本文だけ右へ寄せ、見出しと段差をつける */
-.beach__head { display: grid; gap: 16px; }
+/* ビーチクリーン｜本文だけ右へ寄せ、見出しと段差をつける。
+   動く背景から文字を守る暗幕には、文字が縁へ迫らない余白を持たせる。 */
+.beach__head {
+  display: grid;
+  gap: 16px;
+  padding: clamp(18px, 2vw, 28px) clamp(12px, 1.4vw, 20px);
+}
 .beach__text { margin-left: auto; width: 88%; }
 
 /* 共創｜見出しを縦に立てて右へ。3つの行動と正反対の向きにする */
