@@ -10,12 +10,12 @@
   <!-- ⚠️ CSS より先に置く。あとから付けると、隠す前の文字が一瞬見えてしまう。
        JS を切ればこのクラスは付かず、見出しは最初から読める -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="style_dive-a.css?v=260907-type-4">
+  <link rel="stylesheet" href="style_motion.css?v=260915-1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="motion-edition">
 
   <!-- ══ 背景の潜水映像 ══════════════════════════════════════
        窓（.dive-window）はスクロールで位置と大きさが変わる。
@@ -24,15 +24,17 @@
        スマホでは窓が画面いっぱいになるので背面は使わない。 -->
   <div class="dive-stage" aria-hidden="true">
     <div class="dive-ambient">
-      <video id="dive-bg" muted playsinline preload="auto" poster="assets/dive/dive-poster.jpg">
-        <source src="assets/dive/dive-sm.mp4" type="video/mp4">
+      <video id="dive-bg" muted playsinline preload="none" poster="assets/dive/dive-poster.jpg">
+        <source data-src="assets/dive/dive-sm.mp4" type="video/mp4">
       </video>
     </div>
     <div class="dive-window" id="dive-window">
-      <video id="dive" muted playsinline preload="auto" poster="assets/dive/dive-poster.jpg">
-        <source src="assets/dive/dive.mp4" type="video/mp4">
+      <video id="dive" muted playsinline preload="none" poster="assets/dive/dive-poster.jpg">
+        <source data-src="assets/dive/dive.mp4" type="video/mp4">
       </video>
     </div>
+    <svg class="water-rings" viewBox="0 0 600 600" fill="none"><circle cx="300" cy="300" r="130"/><circle cx="300" cy="300" r="200"/><circle cx="300" cy="300" r="275"/></svg>
+    <div class="water-light"></div>
     <div class="dive-tint" id="dive-tint"></div>
   </div>
 
@@ -60,11 +62,13 @@
     </div>
   </header>
 
+  <div class="journey" aria-hidden="true"><span class="journey__line"></span><span class="journey__number">01</span><span class="journey__total">/ 07</span></div>
+  <button class="motion-toggle" type="button" aria-pressed="false" aria-label="動きを止める"><span aria-hidden="true">Ⅱ</span></button>
   <main>
 
     <!-- ── 1. ヒーロー｜窓は中央・大 ───────────────────────── -->
     <section class="sc sc--hero" data-window="center-lg" data-tint="0" aria-labelledby="hero-title">
-      <div class="hero__inner readable">
+      <div class="hero__hold"><div class="hero__inner readable">
         <p class="hero__en">GENERAL INCORPORATED ASSOCIATION YUINCHU</p>
         <h1 class="hero__title" id="hero-title" lang="ja"><span>宮古島の美しい</span><span>海と文化。</span><span>人とのつながりを</span><span>次の世代へ。</span></h1>
       </div>
@@ -74,7 +78,7 @@
           <span class="hero__marquee-item">Save the Miyakojima BLUE for the future.　地域と共に歩み、未来を創り続ける。</span>
           <span class="hero__marquee-item" aria-hidden="true">Save the Miyakojima BLUE for the future.　地域と共に歩み、未来を創り続ける。</span>
         </div>
-      </div>
+      </div></div>
     </section>
 
     <!-- ── 2. 理念｜窓は左、本文は右の1カラム ─────────────── -->
@@ -94,9 +98,9 @@
 
     <!-- ── 3. 水面を割る｜窓が画面いっぱい。ここがピーク ──── -->
     <section class="sc sc--break" data-window="full" data-tint="0" id="sustainability">
-      <div class="break__inner readable" data-motion="bloom">
-        <h2 class="t-huge">持続可能な宮古島にするために、<br>3つの視点から行動する。</h2>
-      </div>
+      <div class="break__hold"><div class="break__inner readable" data-motion="bloom">
+        <h2 class="t-huge"><span class="break__line">持続可能な宮古島にするために、</span><br><span class="break__line">3つの視点から行動する。</span></h2>
+      </div></div>
     </section>
 
     <!-- ── 4. 3つの行動｜窓は右下へ退く。横長の帯で積む ──── -->
@@ -133,7 +137,7 @@
           <a class="link-arrow" href="beach-clean.html">詳しくはこちら</a>
         </div>
       </div>
-      <div class="beach__strip" role="group" aria-label="ビーチクリーン活動の写真">
+      <div class="gallery-journey"><div class="gallery-hold"><div class="beach__strip" role="group" aria-label="ビーチクリーン活動の写真">
         <!-- ⚠️ 同じ4枚を2組ぶん並べる。1組ぶん流したところで最初へ戻すので、
              途切れずに回り続ける。片方は読み上げから外す -->
         <div class="beach__track">
@@ -146,7 +150,7 @@
           <figure aria-hidden="true"><img src="assets/beach-clean-team-vertical.jpg" alt="" loading="lazy"></figure>
           <figure aria-hidden="true"><img src="assets/beach-clean-collected.jpg" alt="" loading="lazy"></figure>
         </div>
-      </div>
+      </div><div class="gallery-meter" aria-hidden="true"><span>01</span><i></i><span>04</span></div></div></div>
     </section>
 
     <!-- ── 6. 共創｜窓は右。左は罫線で区切ったリスト ──────── -->
@@ -247,32 +251,14 @@
 
   </main>
 
-  <script src="dive.js?v=260907-hybrid-1"></script>
+  <script src="motion.js?v=260915-1"></script>
   <script>
-    // ── 潜水映像のスクロール連動 ────────────────────────
-    // 映像時刻だけを指定する。既存の data-window / data-tint は表示状態を担当する。
-    // 原則は見出し中央が画面上端から45%に来る位置。point: 1 は要素の末尾。
-    const syncAnchors = [
-      { page: 'start', time: 0.00 },                                      // Hero
-      { selector: '#philosophy h2', time: 2.00 },                         // 理念
-      { selector: '#sustainability h2', time: 4.75 },                      // 持続可能性
-      { selector: '.sc--acts h3', time: 6.00 },                           // 3つの活動
-      { selector: '#beach-clean h2', time: 8.25 },                        // ビーチクリーン
-      { selector: '#co-creation h2', time: 9.50 },                        // 共創
-      { selector: '.sc--product h2', time: 11.00 },                       // プロダクト
-      { selector: '#company h2', time: 12.00 },                           // 法人概要
-      { selector: '#contact summary', time: 13.00 },                     // 問い合わせ開始
-      { selector: '#contact .ask', point: 1, time: 13.00 },               // 問い合わせ終了
-      { selector: '.closing', viewport: 0.75, time: 14.50 },               // 末尾でも届く読書位置
-      { page: 'end', time: 15.00 }
-    ];
-    // 比較用: ?sync=global なら従来のページ全体比例。指定なしはHybrid。
+    // シーンと映像の対応点は motion.js 内でまとめて測定する。
     initDive({
       main: document.getElementById('dive'),
       ambient: document.getElementById('dive-bg'),
       windowEl: document.getElementById('dive-window'),
-      tintEl: document.getElementById('dive-tint'),
-      syncAnchors: new URLSearchParams(location.search).get('sync') === 'global' ? null : syncAnchors
+      tintEl: document.getElementById('dive-tint')
     });
 
     // ── メニュー ───────────────────────────────────────
