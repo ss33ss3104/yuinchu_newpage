@@ -121,9 +121,10 @@ function initDive(refs) {
     if(refs.ambient && refs.ambient.readyState>=2 && !refs.ambient.seeking && Math.abs(refs.ambient.currentTime-filmTime)>.09) refs.ambient.currentTime=filmTime;
     if(y!==lastY || measured) {
       const hp=progress(hero,y);
-      set(hero,'--hero-y',(-hp*44).toFixed(2)+'px');
-      set(hero,'--hero-scale',1-hp*.08);
-      set(hero,'--hero-alpha',1-smooth((hp-.16)/.58));
+      const heroEnd=geometry.get(hero).y+geometry.get(hero).h;
+      set(hero,'--hero-y',(-hp*12).toFixed(2)+'px');
+      set(hero,'--hero-scale',1-hp*.04);
+      set(hero,'--hero-alpha',1-smooth((y-(heroEnd-vh*.85))/(vh*.5)));
       const cp=progress(crossing,y);
       const approach=entering(crossing,y);
       set(crossing,'--line-x',((1-smooth(approach))*36).toFixed(2)+'px');
