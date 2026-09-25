@@ -251,8 +251,8 @@
 
   </main>
 
-  <script src="motion.js?v=260925-review-1"></script>
-  <script src="ripple.js?v=260925-mobile-2" defer></script>
+  <script src="motion.js?v=260925-scroll-3"></script>
+  <script src="ripple.js?v=260925-scroll-3" defer></script>
   <script>
     // シーンと映像の対応点は motion.js 内でまとめて測定する。
     initDive({
@@ -265,7 +265,6 @@
     // ── メニュー ───────────────────────────────────────
     const menuButton = document.getElementById('menu-button');
     const globalNav = document.getElementById('global-nav');
-    const header = document.querySelector('.site-header');
 
     menuButton.addEventListener('click', () => {
       const isOpen = globalNav.classList.toggle('is-open');
@@ -281,28 +280,6 @@
         menuButton.setAttribute('aria-expanded', 'false');
       });
     });
-    const updateHeader = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
-    window.addEventListener('scroll', updateHeader, { passive: true });
-    updateHeader();
-
-    // ── メニューの現在地 ───────────────────────────────
-    // 画面の上から42%の高さを越えた最後の節を「いま読んでいる節」とする。
-    const navLinks = Array.from(globalNav.querySelectorAll('a[href^="#"]'));
-    const navPairs = navLinks
-      .map((link) => ({ link, section: document.querySelector(link.getAttribute('href')) }))
-      .filter((pair) => pair.section);
-
-    const updateCurrent = () => {
-      let current = navPairs[0];
-      navPairs.forEach((pair) => {
-        if (pair.section.getBoundingClientRect().top <= window.innerHeight * 0.42) current = pair;
-      });
-      navPairs.forEach((pair) => pair.link.classList.toggle('is-current', pair === current));
-    };
-    window.addEventListener('scroll', updateCurrent, { passive: true });
-    window.addEventListener('resize', updateCurrent);
-    updateCurrent();
-
     // ── 問い合わせフォーム ─────────────────────────────
     // 送信先は GAS のウェブアプリURL。現行 index.html と同じ受け口。
     // ⚠️ 本番へ採用するときは index.html / beach-clean.html と同じ値かを確認する。

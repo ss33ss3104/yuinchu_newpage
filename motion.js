@@ -21,6 +21,8 @@ function initDive(refs) {
   const ruled = q('.ruled');
   const co = q('.cocreation__head');
   const contact = q('.cta');
+  const header = q('.site-header');
+  const navPairs = all('#global-nav a[href^="#"]').map(link => ({ link, section: q(link.getAttribute('href')) })).filter(pair => pair.section);
   const chapterNumber = q('.journey__number');
   const chapterSections = ['.sc--hero','#philosophy','#sustainability','#beach-clean','#co-creation','.sc--product','#company'].map(q);
   const arrivals = all('.philosophy__body > *, .beach__head h2, .beach__text > *, .act__title, .act__text, .ruled > div, .product__body > *, .company__inner > *');
@@ -29,7 +31,7 @@ function initDive(refs) {
   let frameId = null, lastTime = 0, lastY = -1, filmTime = 0, duration = 0;
   let geometry = new Map(), anchors = [], maxY = 1, vh = innerHeight, travel = 0;
   let pending = new Set(arrivals), needsMeasure = true, videosLoaded = false;
-  let chapter = -1;
+  let chapter = -1, navIndex = -1;
   const values = new WeakMap();
   function set(el, name, value) {
     if (!el) return;
@@ -44,9 +46,10 @@ function initDive(refs) {
   }
   function invalidate() { needsMeasure = true; request(); }
   function measure() {
-    vh = innerHeight;
-    maxY = Math.max(1, document.documentElement.scrollHeight - vh);
-    const targets = new Set([...sections, ...arrivals, ...acts, gallery, ruled, co, contact]);
+    // The pinned scene uses svh; browser-toolbar resizing must not shift its film anchors.
+    vh = body.classList.contains('motion-ready') ? q('.hero__hold').offsetHeight || innerHeight : innerHeight;
+    maxY = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    const targets = new Set([...sections, ...arrivals, ...acts, ...navPairs.map(pair=>pair.section), gallery, ruled, co, contact]);
     // Read all layout before the animation write phase. Section positions are never transformed.
     targets.forEach(el => {
       if (!el) return;
@@ -86,11 +89,15 @@ function initDive(refs) {
     });
   }
   function loadVideos() {
-    if (videosLoaded || paused) return;
-    videosLoaded = true;
-    refs.main.src = innerWidth < 768 ? 'assets/dive/dive-sm.mp4' : 'assets/dive/dive.mp4';
-    refs.main.load();
-    if (innerWidth >= 768 && refs.ambient) { refs.ambient.src = 'assets/dive/dive-sm.mp4'; refs.ambient.load(); }
+    if (paused) return;
+    if (!videosLoaded) {
+      videosLoaded = true;
+      refs.main.src = innerWidth < 768 ? 'assets/dive/dive-sm.mp4' : 'assets/dive/dive.mp4';
+      refs.main.load();
+    }
+    if (innerWidth >= 768 && refs.ambient && !refs.ambient.getAttribute('src')) {
+      refs.ambient.src = 'assets/dive/dive-sm.mp4'; refs.ambient.load();
+    }
   }
   [refs.main, refs.ambient].filter(Boolean).forEach(video => {
     video.addEventListener('loadedmetadata', () => { if(video===refs.main) duration=video.duration; request(); });
@@ -113,12 +120,23 @@ function initDive(refs) {
     chapterSections.forEach((el,i)=>{if(geometry.get(el).y<=y+vh*.42) nextChapter=i;});
     if(nextChapter!==chapter) { chapter=nextChapter; chapterNumber.textContent=String(chapter+1).padStart(2,'0'); }
     reveal(y);
+    if(y!==lastY || measured) {
+      header.classList.toggle('is-scrolled',y>40);
+      let current=0;
+      navPairs.forEach((pair,i)=>{if(geometry.get(pair.section).y<=y+vh*.42) current=i;});
+      if(current!==navIndex) {
+        navPairs.forEach((pair,i)=>pair.link.classList.toggle('is-current',i===current));
+        navIndex=current;
+      }
+    }
     if(paused) { lastY=y; return; }
     const target=Math.min(Math.max(0,duration-.045), timeAt(y));
     filmTime += (target-filmTime)*(1-Math.exp(-dt/100));
     if(Math.abs(target-filmTime)<.006) filmTime=target;
-    if(refs.main.readyState>=2 && !refs.main.seeking && Math.abs(refs.main.currentTime-filmTime)>.016) refs.main.currentTime=filmTime;
-    if(refs.ambient && refs.ambient.readyState>=2 && !refs.ambient.seeking && Math.abs(refs.ambient.currentTime-filmTime)>.09) refs.ambient.currentTime=filmTime;
+    // The source is 24 fps: don't decode the same frame repeatedly at sub-frame times.
+    const frameTime=Math.min(Math.max(0,duration-.045),Math.round(filmTime*24)/24+.001);
+    if(refs.main.readyState>=2 && !refs.main.seeking && Math.abs(refs.main.currentTime-frameTime)>1/48) refs.main.currentTime=frameTime;
+    if(refs.ambient && refs.ambient.readyState>=2 && !refs.ambient.seeking && Math.abs(refs.ambient.currentTime-frameTime)>.09) refs.ambient.currentTime=frameTime;
     if(y!==lastY || measured) {
       const hp=progress(hero,y);
       const heroEnd=geometry.get(hero).y+geometry.get(hero).h;
@@ -163,14 +181,17 @@ function initDive(refs) {
     toggle.querySelector('span').textContent=paused?'▷':'Ⅱ';
     toggle.disabled=reduce.matches;
     if(reduce.matches) toggle.setAttribute('aria-label','端末の設定により動きを停止中');
-    if(paused) { refs.main.pause(); refs.ambient?.pause(); }
+    if(paused) {
+      refs.main.pause(); refs.ambient?.pause();
+      if(geometry.has(gallery)) strip.scrollLeft=progress(gallery,scrollY)*travel;
+    }
     else { strip.scrollLeft=0; loadVideos(); }
     lastY=-1; invalidate();
   }
   toggle.addEventListener('click',()=>{userPaused=!userPaused;applyPause();});
   reduce.addEventListener('change',applyPause);
   addEventListener('scroll',request,{passive:true});
-  addEventListener('resize',invalidate,{passive:true});
+  addEventListener('resize',()=>{loadVideos();invalidate();},{passive:true});
   addEventListener('pageshow',invalidate);
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden) { if(frameId!==null) cancelAnimationFrame(frameId); frameId=null; lastTime=0; }
