@@ -8,7 +8,7 @@
   if (!video || !canvas || !section || !heading) return;
 
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' });
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: false, powerPreference: 'low-power' });
   if (!gl) return;
 
   const vertexSource = `attribute vec2 a_pos; varying vec2 v_uv;
@@ -30,11 +30,13 @@
       float wave=0.0;
       float crest=0.0;
       float trough=0.0;
+      float coverage=0.0;
       for(int i=0;i<2;i++){
         float edge=radius-(front-float(i)*0.048);
         float weight=1.0-float(i)*0.35;
         float band=exp(-pow(edge/0.019,2.0));
         wave+=sin(edge*175.0)*band*weight;
+        coverage+=band*weight;
         float glint=0.30+0.70*pow(max(0.0,sin(angle*9.0+u_time*0.7)+0.35*sin(angle*17.0-u_time*0.4)),2.0);
         crest+=exp(-pow((edge-0.004)/0.006,2.0))*weight*glint;
         trough+=exp(-pow((edge+0.008)/0.008,2.0))*weight;
@@ -48,7 +50,7 @@
       vec3 color=texture2D(u_film,clamp(uv,0.0,1.0)).rgb;
       color+=vec3(0.22,0.29,0.28)*crest*0.8*fade;
       color-=vec3(0.07,0.09,0.08)*trough*0.8*fade;
-      gl_FragColor=vec4(color,1.0);
+      gl_FragColor=vec4(color,clamp(coverage*1.15*fade,0.0,1.0));
     }`;
 
   function compile(type, source) {
@@ -89,18 +91,35 @@
   const centerLocation = gl.getUniformLocation(program, 'u_center');
   const time = gl.getUniformLocation(program, 'u_time');
   let frame = 0, active = false, played = false, started = 0, lastDraw = 0, lastFilmTime = -1;
+  let textureReady = false;
   let center = [0.5, 0.5];
 
   function allowed() {
     return !reducedMotion.matches && !document.body.classList.contains('motion-paused') &&
-      !document.hidden && video.readyState >= 2 && video.videoWidth > 0;
+      !document.hidden && textureReady;
+  }
+  function uploadFrame() {
+    if (video.readyState < 2 || !video.videoWidth) return;
+    try {
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
+      lastFilmTime = video.currentTime;
+      textureReady = true;
+    } catch (_) {
+      // Keep the last decoded frame while the video is seeking.
+    }
   }
   function inScene() {
     const sectionRect = section.getBoundingClientRect();
     const rect = heading.getBoundingClientRect();
     const middle = (rect.top + rect.bottom) / 2;
     return sectionRect.bottom > innerHeight * 0.45 &&
-      middle <= innerHeight * 0.55 && middle >= innerHeight * 0.35;
+      middle <= innerHeight * 0.72 && middle >= innerHeight * 0.28;
+  }
+  function nearScene() {
+    const rect = section.getBoundingClientRect();
+    return rect.top < innerHeight * 1.5 && rect.bottom > 0;
   }
   function headingCenter() {
     const title = heading.getBoundingClientRect();
@@ -133,16 +152,11 @@
       }
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      if (video.currentTime !== lastFilmTime && !video.seeking) {
-        try {
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, video);
-          lastFilmTime = video.currentTime;
-        } catch (_) { stop(); return; }
-      }
-      if (lastFilmTime < 0) { frame = requestAnimationFrame(draw); return; }
+      if (video.currentTime !== lastFilmTime && !video.seeking) uploadFrame();
       if (!started) started = now;
       gl.uniform2f(size, width, height);
       gl.uniform2f(filmSize, video.videoWidth, video.videoHeight);
+      center = headingCenter();
       gl.uniform2f(centerLocation, center[0], center[1]);
       gl.uniform1f(time, (now - started) / 1000);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -158,16 +172,16 @@
     played = true;
     center = headingCenter();
     started = 0;
-    lastFilmTime = -1;
     frame = requestAnimationFrame(draw);
   }
   addEventListener('scroll', update, { passive: true });
   addEventListener('resize', update, { passive: true });
-  video.addEventListener('loadeddata', update);
-  video.addEventListener('seeked', update);
+  video.addEventListener('loadeddata', () => { uploadFrame(); update(); });
+  video.addEventListener('seeked', () => { if (nearScene()) uploadFrame(); update(); });
   document.addEventListener('visibilitychange', update);
   reducedMotion.addEventListener('change', update);
   new MutationObserver(update).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); stop(); });
+  uploadFrame();
   update();
 })();
