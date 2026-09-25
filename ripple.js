@@ -21,13 +21,20 @@
     uniform vec2 u_center;
     uniform float u_time;
     uniform float u_mobile;
+    vec2 filmUV(vec2 uv){
+      float aspect=u_size.x/u_size.y;
+      float filmAspect=u_film_size.x/u_film_size.y;
+      if(aspect>filmAspect) uv.y=(uv.y-0.5)*(filmAspect/aspect)+0.5;
+      else uv.x=(uv.x-0.5)*(aspect/filmAspect)+0.5;
+      return clamp(uv,0.0,1.0);
+    }
     void main(){
       float aspect=u_size.x/u_size.y;
       vec2 metric=vec2((v_uv.x-u_center.x)*aspect,v_uv.y-u_center.y);
       float distance=length(metric);
       float front=u_time*0.105;
       if(distance>front+0.065 || distance<max(0.0,front-0.11)){
-        gl_FragColor=vec4(0.0);
+        gl_FragColor=u_mobile>0.5 ? vec4(texture2D(u_film,filmUV(v_uv)).rgb,1.0) : vec4(0.0);
         return;
       }
       float angle=atan(metric.y,metric.x);
@@ -49,11 +56,16 @@
       }
       float fade=smoothstep(0.0,0.42,cycle)*(1.0-smoothstep(3.55,4.2,cycle));
       vec2 direction=normalize(metric+vec2(0.0001));
-      vec2 uv=v_uv+vec2(direction.x/aspect,direction.y)*wave*mix(0.0112,0.0135,u_mobile)*fade;
-      float filmAspect=u_film_size.x/u_film_size.y;
-      if(aspect>filmAspect) uv.y=(uv.y-0.5)*(filmAspect/aspect)+0.5;
-      else uv.x=(uv.x-0.5)*(aspect/filmAspect)+0.5;
-      vec3 color=texture2D(u_film,clamp(uv,0.0,1.0)).rgb;
+      vec2 uv=v_uv+vec2(direction.x/aspect,direction.y)*wave*0.0112*fade;
+      vec3 color=texture2D(u_film,filmUV(uv)).rgb;
+      if(u_mobile>0.5){
+        // Match the approved mock at its default strength (0.8). Render the
+        // decoded film once instead of diluting the refraction with another copy.
+        color+=vec3(0.22,0.29,0.28)*crest*0.8*fade;
+        color-=vec3(0.07,0.09,0.08)*trough*0.8*fade;
+        gl_FragColor=vec4(color,1.0);
+        return;
+      }
       // Neutral lighting keeps the film's hue and stops below channel clipping.
       float light=1.0+(min(crest,1.0)*0.32-trough*0.10)*fade;
       float peak=max(max(color.r,color.g),color.b);
@@ -146,7 +158,7 @@
     const film = canvas.getBoundingClientRect();
     if (!active) { active = true; played = true; started = now; }
     if (now - started >= 4200) { stop(); return; }
-    const ratio = Math.min(devicePixelRatio || 1, innerWidth < 768 ? 1.25 : 1.5);
+    const ratio = Math.min(devicePixelRatio || 1, 1.5);
     const width = Math.max(1, Math.round(film.width * ratio));
     const height = Math.max(1, Math.round(film.height * ratio));
     if (canvas.width !== width || canvas.height !== height) {
