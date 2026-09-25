@@ -10,7 +10,7 @@
   <!-- ⚠️ CSS より先に置く。あとから付けると、隠す前の文字が一瞬見えてしまう。
        JS を切ればこのクラスは付かず、見出しは最初から読める -->
   <script>document.documentElement.classList.add('js');</script>
-  <link rel="stylesheet" href="style_motion.css?v=260925-1">
+  <link rel="stylesheet" href="style_motion.css?v=260925-ripple-1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
@@ -32,8 +32,8 @@
       <video id="dive" muted playsinline preload="none" poster="assets/dive/dive-poster.jpg">
         <source data-src="assets/dive/dive.mp4" type="video/mp4">
       </video>
+      <canvas class="water-ripple" id="water-ripple" aria-hidden="true"></canvas>
     </div>
-    <svg class="water-rings" viewBox="0 0 600 600" fill="none"><circle cx="300" cy="300" r="130"/><circle cx="300" cy="300" r="200"/><circle cx="300" cy="300" r="275"/></svg>
     <div class="water-light"></div>
     <div class="dive-tint" id="dive-tint"></div>
   </div>
@@ -252,6 +252,7 @@
   </main>
 
   <script src="motion.js?v=260915-1"></script>
+  <script src="ripple.js?v=260925-1" defer></script>
   <script>
     // シーンと映像の対応点は motion.js 内でまとめて測定する。
     initDive({
