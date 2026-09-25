@@ -38,6 +38,7 @@
 .water-ripple { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .45s ease; pointer-events: none; }
 .water-ripple.is-active { opacity: 1; }
 .water-light { position: absolute; inset: -12%; background: conic-gradient(from 166deg at 60% -10%, transparent 0deg, #defbf91a 8deg, transparent 15deg, #e8fff00c 22deg, transparent 29deg); opacity: var(--light,0); transform: translate3d(var(--light-x,0px),0,0); }
+@media (max-width: 767px) { .water-light { display: none; } }
 /* A continuous score, readable even with motion paused. */
 .journey { position: fixed; z-index: 40; right: 32px; top: 50%; display: grid; justify-items: center; gap: 14px; font: 14px var(--font-en); letter-spacing: .1em; color: #f4f0e5; transform: translateY(-50%); pointer-events: none; }
 .journey__line { width: 1px; height: 116px; background: #ffffff26; position: relative; }

@@ -44,8 +44,8 @@
       }
       float fade=smoothstep(0.0,0.42,cycle)*(1.0-smoothstep(3.55,4.2,cycle));
       if(u_mobile>0.5){
-        float light=(crest*0.38+abs(wave)*0.045-trough*0.09)*fade;
-        gl_FragColor=vec4(light>=0.0 ? vec3(1.0) : vec3(0.0),clamp(abs(light),0.0,0.36));
+        float shade=(crest*0.11+trough*0.065)*fade;
+        gl_FragColor=vec4(0.0,0.0,0.0,clamp(shade,0.0,0.11));
         return;
       }
       vec2 direction=normalize(metric+vec2(0.0001));
