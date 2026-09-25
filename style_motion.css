@@ -12,6 +12,10 @@
 .motion-edition .readable::before { inset: -28% -12%; }
 .motion-edition .dive-window { view-transition-name: ocean; }
 .motion-edition .dive-tint { background: linear-gradient(180deg, #06374400, #021a2ed9); }
+/* Keep the stretched side fill soft enough for the 540px video, while revealing a little more of the water. */
+@media (min-width: 768px) {
+  .dive-ambient video, .dive-ambient img { filter: blur(36px) saturate(1.35); }
+}
 .motion-edition .hero__marquee-track { animation: none; }
 .motion-edition .hero__marquee-item { font-size: 10px; letter-spacing: .15em; }
 .motion-edition .hero__marquee { bottom: 25px; }
