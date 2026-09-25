@@ -43,10 +43,10 @@
     /* ── 理事｜代表を1枚大きく、続く5名を2列で ─────────── */
     .members { display: grid; gap: 24px; }
     /* 代表は他の理事より一段だけ大きく。並べたときに序列が分かる程度に留める */
-    .member-lead figure { margin: 0; width: min(60%, 260px); }
+    .member-lead figure { margin: 0; width: min(60%, 220px); }
     .member-lead img {
       width: 100%;
-      height: clamp(160px, 21vh, 208px);
+      height: clamp(144px, 18vh, 176px);
       object-fit: cover;
       object-position: center 22%;
     }
@@ -68,13 +68,14 @@
       grid-template-columns: 1fr 1fr;
       gap: 22px 18px;
     }
-    .member-grid figure { margin: 0; }
+    .member-grid figure { margin: 0; width: min(100%, 180px); }
     .member-grid img {
       width: 100%;
-      height: clamp(132px, 18vh, 172px);
+      height: clamp(112px, 15vh, 144px);
       object-fit: cover;
       object-position: center 22%;
     }
+    .member-grid img.member-photo--mono { filter: grayscale(1); }
     /* ── 理事プロフィール｜読み物として罫線で区切る ───────── */
     .profiles { display: grid; gap: 34px; }
     .profile { display: grid; gap: 12px; }
@@ -221,7 +222,7 @@
               </figcaption>
             </figure>
             <figure>
-              <img src="assets/directors/kuranari-yusuke.jpg" alt="倉成 雄介" loading="lazy">
+              <img class="member-photo--mono" src="assets/directors/kuranari-yusuke.jpg" alt="倉成 雄介" loading="lazy">
               <figcaption>
                 <p class="member__name" lang="ja">倉成 雄介</p>
                 <p class="member__role">理事</p>
