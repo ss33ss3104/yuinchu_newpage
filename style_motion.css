@@ -24,8 +24,8 @@
 .motion-edition .hero__en { line-height: 1.8; font-size: 10px; }
 /* Sticky is enabled only after the choreography has initialized. JS failure stays a normal page. */
 .motion-ready .sc.sc--hero { display: block; height: 155svh; padding-block: 0; }
-.motion-ready .hero__hold { position: sticky; top: 0; height: 100svh; display: grid; align-items: center; }
-.motion-ready .hero__inner { transform: translate3d(0,var(--hero-y,0px),0) scale(var(--hero-scale,1)); opacity: var(--hero-alpha,1); }
+.motion-ready .hero__hold { position: sticky; top: 0; height: 100svh; display: grid; align-items: center; opacity: var(--hero-alpha,1); }
+.motion-ready .hero__inner { transform: translate3d(0,var(--hero-y,0px),0) scale(var(--hero-scale,1)); }
 .motion-ready .hero__title span { transform-origin: 50% 80%; }
 /* Waterline: type gathers around a shared horizon, rests, then releases. */
 .motion-ready .sc.sc--break { display: block; height: 195svh; min-height: 0; padding-block: 0; }
@@ -82,10 +82,25 @@
 .motion-ready .cocreation__head .t-lead { transform: translate3d(0,var(--co-y,0px),0); }
 .motion-edition .sc--product { min-height: 115svh; }
 .motion-edition .product__body .t-lead { line-height: 1.9; }
-.motion-edition .cta { position: relative; }
-.motion-edition .cta::after { content: ''; position: absolute; inset: -23px -10px; border: 1px solid #e7e4d940; border-radius: 50%; transform: scale(var(--cta-scale,.8)); opacity: var(--cta-opacity,0); pointer-events: none; transition: border-color .35s; }
-.motion-edition .cta:hover::after { border-color: #efe7d8; }
-.motion-edition .ask[open] .cta::after { opacity: 0; }
+.motion-edition .cta { position: relative; isolation: isolate; }
+.motion-edition .sc--contact { scroll-margin-top: min(24svh,170px); }
+.motion-edition .cta::before, .motion-edition .cta::after {
+  content: ''; position: absolute; z-index: -1; inset: -38px -42px; pointer-events: none;
+  border-radius: 49% 51% 48% 52%; opacity: .28; transform: scale(1);
+  background: radial-gradient(ellipse at 50% 50%, transparent 47%, #9ed8db24 49%, #e9fff27a 51%, #d0f4e54d 52%, transparent 55%, #a6d7df26 59%, transparent 62%);
+  filter: blur(.35px) drop-shadow(0 0 7px #bcefe866);
+}
+.motion-edition .cta::after { border-radius: 51% 49% 52% 48%; transform: scale(.72); }
+.motion-edition .cta.is-rippling::before { animation: contact-ripple 4.2s ease-out infinite; }
+.motion-edition .cta.is-rippling::after { animation: contact-ripple 4.2s ease-out -2.1s infinite; }
+.motion-edition .cta:hover::before, .motion-edition .cta:focus-visible::before { filter: blur(.2px) drop-shadow(0 0 12px #d9fff3aa); }
+.motion-edition .ask[open] .cta::before, .motion-edition .ask[open] .cta::after { animation: none; opacity: 0; }
+@keyframes contact-ripple {
+  0% { opacity: 0; transform: scale(.58,.70) rotate(-2deg); }
+  17% { opacity: .68; }
+  58% { opacity: .4; }
+  100% { opacity: 0; transform: scale(1.42,1.26) rotate(2deg); }
+}
 /* New reveal primitives: never applied until script is running, no forced replay on reverse scroll. */
 .motion-ready [data-arrive] { opacity: 0; transform: translateY(24px); transition: opacity .85s ease, transform 1.1s cubic-bezier(.16,1,.3,1); }
 .motion-ready [data-arrive].arrived { opacity: 1; transform: none; }
@@ -119,10 +134,15 @@
 .motion-paused .beach__track figure { transform: none !important; opacity: 1 !important; }
 .motion-paused .beach__strip { overflow-x: auto; }
 .motion-paused .water-ripple, .motion-paused .water-light { display: none; }
+.motion-paused .hero__hold { opacity: 1 !important; }
+.motion-paused .cta::before, .motion-paused .cta::after { opacity: .28; transform: scale(1); }
+.motion-paused .ask[open] .cta::before, .motion-paused .ask[open] .cta::after { opacity: 0; }
 .motion-paused *, .motion-paused *::before, .motion-paused *::after { animation: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
   .water-ripple, .water-light { display: none; }
+  .motion-edition .cta::before, .motion-edition .cta::after { animation: none; opacity: .28; transform: scale(1); }
+  .motion-edition .ask[open] .cta::before, .motion-edition .ask[open] .cta::after { opacity: 0; }
   .motion-edition .global-nav a { transform: none; opacity: 1; transition: none; }
 }
 

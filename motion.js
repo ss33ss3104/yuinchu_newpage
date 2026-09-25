@@ -123,7 +123,7 @@ function initDive(refs) {
       const hp=progress(hero,y);
       set(hero,'--hero-y',(-hp*44).toFixed(2)+'px');
       set(hero,'--hero-scale',1-hp*.08);
-      set(hero,'--hero-alpha',1-smooth((hp-.18)/.8)*.85);
+      set(hero,'--hero-alpha',1-smooth((hp-.16)/.58));
       const cp=progress(crossing,y);
       const approach=entering(crossing,y);
       set(crossing,'--line-x',((1-smooth(approach))*36).toFixed(2)+'px');
@@ -145,7 +145,9 @@ function initDive(refs) {
       });
       set(ruled,'--thread',clamp((y+vh*.75-geometry.get(ruled).y)/geometry.get(ruled).h));
       set(co,'--co-y',((1-entering(co,y))*40).toFixed(2)+'px');
-      const ap=entering(contact,y); set(contact,'--cta-scale',.85+ap*.15); set(contact,'--cta-opacity',ap*.75);
+      const ap=entering(contact,y);
+      const contactBox=geometry.get(contact);
+      contact.classList.toggle('is-rippling',ap>.35 && y<contactBox.y+contactBox.h+vh*.6);
       lastY=y;
     }
     // Once the seek settles, no background animation loop remains active.
