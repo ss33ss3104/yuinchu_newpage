@@ -40,16 +40,23 @@
       color: rgba(255, 255, 255, 0.86);
     }
 
-    /* ── 理事｜代表を1枚大きく、続く5名を2列で ─────────── */
-    .members { display: grid; gap: 24px; }
-    /* 代表は他の理事より一段だけ大きく。並べたときに序列が分かる程度に留める */
-    .member-lead figure { margin: 0; width: min(60%, 220px); }
-    .member-lead img {
+    /* ── 理事｜写真と紹介文を一人ずつ続け、紹介文のない理事を最後に並べる ── */
+    .members { display: grid; gap: clamp(42px, 7vh, 72px); }
+    .profile {
+      display: grid;
+      gap: 12px;
+      padding-bottom: clamp(36px, 6vh, 64px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.24);
+    }
+    .profile__photo { margin: 0 0 8px; width: min(100%, 180px); }
+    .profile--lead .profile__photo { width: min(100%, 220px); }
+    .profile__photo img {
       width: 100%;
       height: clamp(144px, 18vh, 176px);
       object-fit: cover;
       object-position: center 22%;
     }
+    .profile:not(.profile--lead) .profile__photo img { height: clamp(112px, 15vh, 144px); }
     .member__name {
       margin: 14px 0 0;
       font-family: var(--font-serif);
@@ -62,6 +69,12 @@
       font-size: var(--fs-label);
       letter-spacing: 0.14em;
       color: var(--sand);
+    }
+    .members__more-title {
+      margin: 0 0 18px;
+      font-family: var(--font-serif);
+      font-size: var(--fs-sub);
+      font-weight: 500;
     }
     .member-grid {
       display: grid;
@@ -77,9 +90,7 @@
     }
     .member-grid img.member-photo--mono { filter: grayscale(1); }
     /* ── 理事プロフィール｜読み物として罫線で区切る ───────── */
-    .profiles { display: grid; gap: 34px; }
-    .profile { display: grid; gap: 12px; }
-    .profile__role {
+    .profile .profile__role {
       margin: 0;
       font-family: var(--font-en);
       font-size: 0.82rem;
@@ -92,7 +103,7 @@
       font-size: var(--fs-sub);
       font-weight: 500;
     }
-    .profile__meta {
+    .profile .profile__meta {
       margin: 0;
       padding-left: 16px;
       border-left: 1px solid rgba(255, 255, 255, 0.34);
@@ -119,7 +130,6 @@
 
     @media (min-width: 768px) {
       .member-grid { gap: 24px 20px; }
-      .profiles { gap: 40px; }
     }
 
     /* ⚠️ 広い画面では左下にロゴが固定で出るので、入口のロゴは消す。
@@ -177,76 +187,26 @@
       </div>
     </section>
 
-    <!-- ── 2. 理事紹介｜代表を1枚大きく、続く5名を2列で ──── -->
+    <!-- ── 2. 理事紹介｜写真と紹介文を一人ずつ、紹介文のない理事は最後に ── -->
     <section class="sc sc--members" aria-labelledby="members-title">
-      <div class="readable" data-motion="slide">
+      <div class="readable">
         <p class="rail rail--flat" aria-hidden="true">BOARD MEMBERS</p>
         <h2 class="t-lead" id="members-title" lang="ja">理事紹介</h2>
         <div class="members">
-          <div class="member-lead">
-            <figure>
+          <article class="profile profile--lead" data-motion="lines">
+            <figure class="profile__photo">
               <img src="assets/directors/torizuka-kentaro-20260925.jpg" alt="鳥塚 健太郎" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">鳥塚 健太郎</p>
-                <p class="member__role">代表理事</p>
-              </figcaption>
             </figure>
-          </div>
-          <div class="member-grid">
-            <figure>
-              <img src="assets/directors/sekino-yuya.jpg" alt="関野 佑也" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">関野 佑也</p>
-                <p class="member__role">理事</p>
-              </figcaption>
-            </figure>
-            <figure>
-              <img src="assets/directors/koga-yutaro.jpg" alt="古賀 裕太郎" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">古賀 裕太郎</p>
-                <p class="member__role">理事</p>
-              </figcaption>
-            </figure>
-            <figure>
-              <img src="assets/directors/kanazawa-daiki.jpg" alt="金沢 大基" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">金沢 大基</p>
-                <p class="member__role">理事</p>
-              </figcaption>
-            </figure>
-            <figure>
-              <img src="assets/directors/sekino-shuhei.jpg" alt="関野 秀平" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">関野 秀平</p>
-                <p class="member__role">理事</p>
-              </figcaption>
-            </figure>
-            <figure>
-              <img class="member-photo--mono" src="assets/directors/kuranari-yusuke.jpg" alt="倉成 雄介" loading="lazy">
-              <figcaption>
-                <p class="member__name" lang="ja">倉成 雄介</p>
-                <p class="member__role">理事</p>
-              </figcaption>
-            </figure>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 3. 理事プロフィール｜読み物 ─────────────────── -->
-    <section class="sc sc--profiles" aria-labelledby="profiles-title">
-      <div class="readable" data-motion="lines">
-        <p class="rail rail--flat" aria-hidden="true">DIRECTOR PROFILE</p>
-        <h2 class="t-lead" id="profiles-title" lang="ja">理事プロフィール</h2>
-        <div class="profiles">
-          <article class="profile">
-            <p class="profile__role">Representative</p>
+            <p class="profile__role">Representative · 代表理事</p>
             <h3 class="profile__name" lang="ja">鳥塚 健太郎</h3>
             <p class="profile__meta">歯科医師<br>医療法人社団聚楽会 理事長<br>企業主導型保育園UHU KIDS 理事長<br>子ども食堂UHU HOUSE 代表</p>
             <p>2012年、埼玉県に「とりづか歯科医院」を開院。医療法人へと成長させ、理事長として法人経営を担う。小児歯科「DENTAL KIDS TOWN」の開設をはじめ、歯科附属保育園「UHU KIDS」、子ども食堂「UHU HOUSE」の運営、就労支援事業など、歯科医療の枠を越えて子どもや地域を支える活動にも力を注いでいる。また、宮古島では従業員の福利厚生を目的としたマリン事業に携わる一方、ビーチクリーンなど海洋環境の保全活動にも取り組む。医療・保育・福祉・地域貢献を通じて、人と人とのつながりを大切にしながら「受けた恩を次の世代へつなぐ」ことをライフワークとしている。</p>
           </article>
-          <article class="profile">
-            <p class="profile__role">Director</p>
+          <article class="profile" data-motion="lines">
+            <figure class="profile__photo">
+              <img src="assets/directors/kanazawa-daiki.jpg" alt="金沢 大基" loading="lazy">
+            </figure>
+            <p class="profile__role">Director · 理事</p>
             <h3 class="profile__name" lang="ja">金沢 大基</h3>
             <p>株式会社iD／株式会社cica 代表取締役。JTB、広告会社、メディア会社を経て2013年に株式会社iDを創業。旅・食・地域をテーマに事業を展開し、2019年には害獣扱いされていた広島県安芸高田市の鹿を「Premium DEER 安芸高田鹿」としてブランド化。2024年に株式会社cicaを設立し地域資源を活用したプロジェクトを多数手がける。現在は食育や探究学習、地域共創を推進するとともに、宮古島の海洋環境をテーマにした新たな活動にも取り組んでいる。</p>
             <ul class="profile__links">
@@ -254,8 +214,11 @@
               <li><a href="https://cica-project.jp" target="_blank" rel="noopener">株式会社cica</a></li>
             </ul>
           </article>
-          <article class="profile">
-            <p class="profile__role">Director</p>
+          <article class="profile" data-motion="lines">
+            <figure class="profile__photo">
+              <img src="assets/directors/sekino-yuya.jpg" alt="関野 佑也" loading="lazy">
+            </figure>
+            <p class="profile__role">Director · 理事</p>
             <h3 class="profile__name" lang="ja">関野 佑也</h3>
             <p class="profile__meta">中小企業診断士（経済産業大臣登録）<br>東京都活性化協議会専門家<br>株式会社MCO Lotus代表取締役<br>株式会社wildside執行役員</p>
             <p>飲食、宿泊業専門経営コンサルタントとして、事業再生から組織改革、経営戦略立案まで行う。プロデューサーとして映画製作を行っており、宮古島では、マリンショップ、居酒屋ブランド粋蓮を展開。2026年5月からDMMオンラインサロンを開設、「現場で使える経営学」を展開している。</p>
@@ -265,11 +228,37 @@
               <li><a href="https://lounge.dmm.com/detail/10119/" target="_blank" rel="noopener">DMMオンラインサロン</a></li>
             </ul>
           </article>
+          <div class="members__more">
+            <h3 class="members__more-title">そのほかの理事</h3>
+            <div class="member-grid" data-motion="slide">
+              <figure>
+                <img src="assets/directors/koga-yutaro.jpg" alt="古賀 裕太郎" loading="lazy">
+                <figcaption>
+                  <p class="member__name" lang="ja">古賀 裕太郎</p>
+                  <p class="member__role">理事</p>
+                </figcaption>
+              </figure>
+              <figure>
+                <img src="assets/directors/sekino-shuhei.jpg" alt="関野 秀平" loading="lazy">
+                <figcaption>
+                  <p class="member__name" lang="ja">関野 秀平</p>
+                  <p class="member__role">理事</p>
+                </figcaption>
+              </figure>
+              <figure>
+                <img class="member-photo--mono" src="assets/directors/kuranari-yusuke.jpg" alt="倉成 雄介" loading="lazy">
+                <figcaption>
+                  <p class="member__name" lang="ja">倉成 雄介</p>
+                  <p class="member__role">理事</p>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- ── 4. 法人概要 ─────────────────────────────────── -->
+    <!-- ── 3. 法人概要 ─────────────────────────────────── -->
     <section class="sc sc--company" aria-labelledby="profile-title">
       <div class="company__inner readable" data-motion="stack">
         <p class="rail rail--flat" aria-hidden="true">PROFILE</p>
@@ -282,7 +271,7 @@
       </div>
     </section>
 
-    <!-- ── 5. 戻る ─────────────────────────────────────── -->
+    <!-- ── 4. 戻る ─────────────────────────────────────── -->
     <section class="sc sc--back">
       <a class="link-arrow" href="index.html#philosophy" data-motion="pop">トップへ戻る</a>
     </section>
