@@ -4,7 +4,8 @@
   const video = document.getElementById('dive');
   const canvas = document.getElementById('water-ripple');
   const section = document.getElementById('sustainability');
-  if (!video || !canvas || !section) return;
+  const heading = section?.querySelector('h2');
+  if (!video || !canvas || !section || !heading) return;
 
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const gl = canvas.getContext('webgl', { alpha: false, antialias: false, powerPreference: 'low-power' });
@@ -17,13 +18,14 @@
     uniform sampler2D u_film;
     uniform vec2 u_size;
     uniform vec2 u_film_size;
+    uniform vec2 u_center;
     uniform float u_time;
     void main(){
       float aspect=u_size.x/u_size.y;
-      vec2 metric=vec2((v_uv.x-0.5)*aspect,v_uv.y-0.28);
+      vec2 metric=vec2((v_uv.x-u_center.x)*aspect,v_uv.y-u_center.y);
       float angle=atan(metric.y,metric.x);
       float radius=length(metric)+sin(angle*7.0+u_time*1.1)*0.0025+sin(angle*11.0-u_time*0.7)*0.0015;
-      float cycle=mod(u_time,4.2);
+      float cycle=u_time;
       float front=cycle*0.105;
       float wave=0.0;
       float crest=0.0;
@@ -84,16 +86,29 @@
   gl.uniform1i(gl.getUniformLocation(program, 'u_film'), 0);
   const size = gl.getUniformLocation(program, 'u_size');
   const filmSize = gl.getUniformLocation(program, 'u_film_size');
+  const centerLocation = gl.getUniformLocation(program, 'u_center');
   const time = gl.getUniformLocation(program, 'u_time');
-  let frame = 0, active = false, started = 0, lastDraw = 0, lastFilmTime = -1;
+  let frame = 0, active = false, played = false, started = 0, lastDraw = 0, lastFilmTime = -1;
+  let center = [0.5, 0.5];
 
   function allowed() {
     return !reducedMotion.matches && !document.body.classList.contains('motion-paused') &&
       !document.hidden && video.readyState >= 2 && video.videoWidth > 0;
   }
   function inScene() {
-    const rect = section.getBoundingClientRect();
-    return rect.top < innerHeight * 0.55 && rect.bottom > innerHeight * 0.45;
+    const sectionRect = section.getBoundingClientRect();
+    const rect = heading.getBoundingClientRect();
+    const middle = (rect.top + rect.bottom) / 2;
+    return sectionRect.bottom > innerHeight * 0.45 &&
+      middle <= innerHeight * 0.55 && middle >= innerHeight * 0.35;
+  }
+  function headingCenter() {
+    const title = heading.getBoundingClientRect();
+    const film = canvas.getBoundingClientRect();
+    return [
+      (title.left + title.width / 2 - film.left) / film.width,
+      1 - (title.top + title.height / 2 - film.top) / film.height
+    ];
   }
   function stop() {
     active = false;
@@ -103,7 +118,9 @@
   }
   function draw(now) {
     frame = 0;
-    if (!active || !allowed()) { stop(); return; }
+    if (!active) return;
+    if (!allowed()) { played = false; stop(); return; }
+    if (started && now - started >= 4200) { stop(); return; }
     if (now - lastDraw >= 32) {
       lastDraw = now;
       const ratio = Math.min(devicePixelRatio || 1, 1.5);
@@ -123,8 +140,10 @@
         } catch (_) { stop(); return; }
       }
       if (lastFilmTime < 0) { frame = requestAnimationFrame(draw); return; }
+      if (!started) started = now;
       gl.uniform2f(size, width, height);
       gl.uniform2f(filmSize, video.videoWidth, video.videoHeight);
+      gl.uniform2f(centerLocation, center[0], center[1]);
       gl.uniform1f(time, (now - started) / 1000);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       canvas.classList.add('is-active');
@@ -132,10 +151,13 @@
     frame = requestAnimationFrame(draw);
   }
   function update() {
-    if (!allowed() || !inScene()) { stop(); return; }
-    if (active) return;
+    if (!inScene()) { played = false; stop(); return; }
+    if (!allowed()) { played = false; stop(); return; }
+    if (active || played) return;
     active = true;
-    started = performance.now();
+    played = true;
+    center = headingCenter();
+    started = 0;
     lastFilmTime = -1;
     frame = requestAnimationFrame(draw);
   }
