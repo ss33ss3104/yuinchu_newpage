@@ -40,7 +40,7 @@
       color: rgba(255, 255, 255, 0.86);
     }
 
-    /* ── 理事｜代表を1枚大きく、続く4名を2列で ─────────── */
+    /* ── 理事｜代表を1枚大きく、続く5名を2列で ─────────── */
     .members { display: grid; gap: 24px; }
     /* 代表は他の理事より一段だけ大きく。並べたときに序列が分かる程度に留める */
     .member-lead figure { margin: 0; width: min(60%, 260px); }
@@ -75,19 +75,6 @@
       object-fit: cover;
       object-position: center 22%;
     }
-    /* 写真の無い理事は、空の箱を並べずに名前だけの行にする */
-    .member-rest { display: grid; gap: 0; margin-top: 6px; }
-    .member-rest > div {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      padding: 15px 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.24);
-    }
-    .member-rest > div:last-child { border-bottom: 1px solid rgba(255, 255, 255, 0.24); }
-    .member-rest .member__name { margin: 0; }
-    .member-rest .member__role { margin: 0; }
-
     /* ── 理事プロフィール｜読み物として罫線で区切る ───────── */
     .profiles { display: grid; gap: 34px; }
     .profile { display: grid; gap: 12px; }
@@ -125,7 +112,6 @@
     }
     .profile__links a::after { content: ''; width: 16px; height: 1px; background: currentColor; }
     .profile__links a:hover { border-color: #fff; }
-    .profile__pending { color: rgba(255, 255, 255, 0.6); }
 
     /* ── 締め｜トップへ戻る ───────────────────────────── */
     .sc--back { justify-content: center; text-align: center; min-height: 0; padding-block: clamp(40px, 6vh, 74px) clamp(70px, 11vh, 130px); }
@@ -190,7 +176,7 @@
       </div>
     </section>
 
-    <!-- ── 2. 理事紹介｜代表を1枚大きく、続く4名を2列で ──── -->
+    <!-- ── 2. 理事紹介｜代表を1枚大きく、続く5名を2列で ──── -->
     <section class="sc sc--members" aria-labelledby="members-title">
       <div class="readable" data-motion="slide">
         <p class="rail rail--flat" aria-hidden="true">BOARD MEMBERS</p>
@@ -198,7 +184,7 @@
         <div class="members">
           <div class="member-lead">
             <figure>
-              <img src="assets/directors/torizuka-kentaro.jpg" alt="鳥塚 健太郎" loading="lazy">
+              <img src="assets/directors/torizuka-kentaro-20260925.jpg" alt="鳥塚 健太郎" loading="lazy">
               <figcaption>
                 <p class="member__name" lang="ja">鳥塚 健太郎</p>
                 <p class="member__role">代表理事</p>
@@ -234,17 +220,13 @@
                 <p class="member__role">理事</p>
               </figcaption>
             </figure>
-          </div>
-          <!-- 写真がまだ無い2名。空の箱を並べず、名前の行にする -->
-          <div class="member-rest">
-            <div>
-              <p class="member__name" lang="ja">平岩 拓路</p>
-              <p class="member__role">理事</p>
-            </div>
-            <div>
-              <p class="member__name" lang="ja">倉成 雄介</p>
-              <p class="member__role">理事</p>
-            </div>
+            <figure>
+              <img src="assets/directors/kuranari-yusuke.jpg" alt="倉成 雄介" loading="lazy">
+              <figcaption>
+                <p class="member__name" lang="ja">倉成 雄介</p>
+                <p class="member__role">理事</p>
+              </figcaption>
+            </figure>
           </div>
         </div>
       </div>
@@ -259,7 +241,12 @@
           <article class="profile">
             <p class="profile__role">Representative</p>
             <h3 class="profile__name" lang="ja">鳥塚 健太郎</h3>
-            <p class="profile__pending">紹介文を追加予定です。</p>
+            <p class="profile__meta">歯科医師<br>医療法人社団聚楽会 理事長<br>企業主導型保育園UHU KIDS 理事長<br>子ども食堂UHU HOUSE 代表</p>
+            <p>2012年、埼玉県に「とりづか歯科医院」を開院。医療法人へと成長させ、理事長として法人経営を担う。小児歯科「DENTAL KIDS TOWN」の開設をはじめ、歯科附属保育園「UHU KIDS」、子ども食堂「UHU HOUSE」の運営、就労支援事業など、歯科医療の枠を越えて子どもや地域を支える活動にも力を注いでいる。また、宮古島では従業員の福利厚生を目的としたマリン事業に携わる一方、ビーチクリーンなど海洋環境の保全活動にも取り組む。医療・保育・福祉・地域貢献を通じて、人と人とのつながりを大切にしながら「受けた恩を次の世代へつなぐ」ことをライフワークとしている。</p>
+            <ul class="profile__links">
+              <li><a href="https://www.torizukashika.com/" target="_blank" rel="noopener">とりづか歯科医院</a></li>
+              <li><a href="https://with-nursery.com/uhukids/" target="_blank" rel="noopener">UHU KIDS</a></li>
+            </ul>
           </article>
           <article class="profile">
             <p class="profile__role">Director</p>
