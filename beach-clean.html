@@ -156,6 +156,12 @@ ol, ul { list-style: none; padding: 0; margin: 0; }
   color: var(--c-ink);
 }
 .btn:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow-card-sm); }
+.btn:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 .btn:focus-visible, a:focus-visible {
   outline: 3px solid var(--c-yellow);
   outline-offset: 3px;
@@ -1685,7 +1691,8 @@ section { background: var(--c-bg); }
 
     <div class="donation__inner reveal" data-stagger="2">
       <p>私たちの活動に共感し、応援してくださる多くの法人の皆さまから、ご支援をいただいております。いただいたご支援は、宮古島の海を守るためのコミュニティづくり、そして活動の継続・発展のために大切に活用させていただきます。ご支援は、単発・継続どちらも可能です。この活動の輪を一緒に広げていただける皆さまの温かいご支援をお待ちしております。</p>
-      <a href="support.html" class="btn btn--primary donation__cta">詳細はこちらから</a>
+      <!-- 公開再開時は support.html へのリンクに戻す。遷移先ページは保持。 -->
+      <button type="button" class="btn btn--primary donation__cta" disabled>準備中</button>
     </div>
   </div>
   <svg class="wave-divider wave-divider--white" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
